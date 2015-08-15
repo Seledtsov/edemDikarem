@@ -1,0 +1,1234 @@
+/* **********************Стили для навигации админзоны ***************************/
+.version_number { FONT-SIZE: 10px; }
+td.adm_navig_selected_arm { FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times; background-color:#CD3D00; }
+.adm_navig_arm { FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times; color:#CD3D00; background-color:#EFEFEF; height: 100%; }
+td.adm_arm_group
+{
+	FONT-SIZE: 12px;
+	FONT-FAMILY: Verdana,Arial,Times;
+	font-weight: bold;
+	color:#CD3D00;
+	background-color:#7293C3;
+}
+
+/**/
+/*  Общие стили элементов страницы */
+/**/
+
+A {
+	font-size: 10pt;
+	font-weight: none;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+}
+
+A:visited {
+	color: #666699;
+}
+
+A:hover {
+	color: #FF8820;
+}
+
+TABLE {
+	font-size: 10pt;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+TR {
+	font-size: 10pt;
+}
+
+TD {
+	font-size: 10pt;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+FORM {
+	font-size: 10pt;
+}
+
+LI {
+	font-size: 10pt;
+}
+
+UL {
+	FONT-SIZE: 10pt;
+}
+
+P {
+	FONT-SIZE: 10pt;
+}
+
+TEXTAREA {
+	FONT-SIZE: 10pt;
+}
+
+BODY {
+	FONT-SIZE: 10pt;
+	MARGIN: 0px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	BACKGROUND-COLOR: #ffffff;
+}
+
+/**/
+/* Постраничник */
+/**/
+.pagenatorBlock {
+	font-size: 10px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+A.pagenator{
+	color: #003e7d;
+	font-size: 10px;
+	text-decoration: underline;
+}
+
+A.pagenator:visited {
+	color: #003e7d;
+}
+
+A.pagenator:hover {
+	color: #FF8820;
+}
+
+
+/**/
+/* Тулбар, это полоска сверху и снизу страницы */
+/**/
+
+td.AdminToolBar { FONT-SIZE: 9pt; COLOR: #e1def0; BACKGROUND-COLOR: #9c93cc; PADDING: 4px;
+}
+
+TD.AdminToolBar A, TD.AdminToolBar A:visited {
+	COLOR: #e1def0;
+	TEXT-DECORATION: underline;
+}
+
+TD.AdminToolBar A:hover {
+	COLOR: #e1def0;
+	TEXT-DECORATION: underline;
+}
+
+/**/
+/* Навигация. Левая колонка таблицы */
+/**/
+
+
+/* Общие стили таблицы */
+TABLE.Nav A {
+	TEXT-DECORATION: none;
+}
+TABLE.Nav A:hover {
+	COLOR: #6699cc;
+	TEXT-DECORATION: none;
+}
+
+TABLE.Nav {
+	BORDER-RIGHT: #999999 0px solid;
+	BACKGROUND-COLOR: #efefef;
+	WIDTH: 100%;
+}
+
+TD.Nav1 {
+	BORDER-RIGHT: #999999 0px solid;
+	BACKGROUND-COLOR: #efefef;
+}
+
+
+/* Стиль для ячейки с меткой. 1-ый уровень */
+TABLE.Nav TD.Label1 {
+	BORDER-RIGHT: #b54500 1px solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #ff8e39 1px solid;
+	PADDING-LEFT: 3px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #ff8e39 1px solid;
+	COLOR: #ffcc00;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #b54500 1px solid;
+	BACKGROUND-COLOR: #fc6700;
+	TEXT-DECORATION: none;
+}
+
+/* Стиль для ячейки со страницей. 1-ый уровень */
+TABLE.Nav TD.Page1 {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	COLOR: #ffcc00;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #efefef;
+	TEXT-DECORATION: none;
+}
+
+/* Стиль для ячейки с текущей страницей. 1-ый уровень */
+TABLE.Nav TD.Page1Selected {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	COLOR: #000000;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #ffffff;
+	TEXT-DECORATION: none;
+}
+
+
+/* Стиль для ячейки с меткой. 2-ый уровень */
+TABLE.Nav TD.Label2 {
+	BORDER-RIGHT: #b54500 1px solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #ff8e39 1px solid;
+	PADDING-LEFT: 8px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #ff8e39 1px solid;
+	COLOR: #ffcc00;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #b54500 1px solid;
+	BACKGROUND-COLOR: #fc6700;
+	TEXT-DECORATION: none;
+}
+
+/* Стиль для ячейки со страницей. 2-ый уровень */
+TABLE.Nav TD.Page2 {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 8px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	COLOR: #ffcc00;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #efefef;
+	TEXT-DECORATION: none;
+}
+
+/* Стиль для ячейки с текущей страницей. 2-ый уровень */
+TABLE.Nav TD.Page2Selected {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 8px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	COLOR: #000000;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #ffffff;
+	TEXT-DECORATION: none;
+}
+
+
+/* Стиль для ячейки с меткой. 3-ый уровень */
+TABLE.Nav TD.Label3 {
+	BORDER-RIGHT: #b54500 1px solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #ff8e39 1px solid;
+	PADDING-LEFT: 18px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 3px;
+	BORDER-LEFT: #ff8e39 1px solid;
+	COLOR: #ffcc00;
+	PADDING-TOP: 3px;
+	BORDER-BOTTOM: #b54500 1px solid;
+	BACKGROUND-COLOR: #fc6700;
+	TEXT-DECORATION: none;
+}
+
+/* Стиль для ячейки со страницей. 3-ый уровень */
+TABLE.Nav TD.Page3 {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 18px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	COLOR: #ffcc00;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #efefef;
+	TEXT-DECORATION: none;
+}
+
+
+/* Стиль для ячейки с текущей страницей. 3-ый уровень */
+TABLE.Nav TD.Page3Selected {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 18px;
+	PADDING-BOTTOM: 1px;
+	COLOR: #000000;
+	PADDING-TOP: 1px;
+	BACKGROUND-COLOR: #ffffff;
+	TEXT-DECORATION: none;
+}
+
+/**/
+/* Стили для содержательной части страницы - то есть для портлетов*/
+/**/
+
+/* Название портлета */
+.PortletTitle {
+	FONT-SIZE: 10pt;
+	COLOR: #000000;
+	padding-top: 2px;
+	padding-bottom: 1px;
+	FONT-WEIGHT: bold;
+}
+
+/*  Версия портлета */
+.PortletVersion {
+	TEXT-ALIGN: right;
+	FONT-SIZE: 8pt;
+	COLOR: #000000;
+	padding-top: 2px;
+	padding-bottom:5px;
+	FONT-WEIGHT: normal;
+}
+
+/* Ссылка для вызова справки */
+.PortletHelp {
+	FONT-SIZE: 8pt;
+	COLOR: #000000;
+	padding-top: 2px;
+	padding-bottom: 5px;
+	FONT-WEIGHT: bold;
+}
+
+
+/* Ячейка с названием поля */
+td.FieldTitle {
+	FONT-WEIGHT: normal;
+	FONT-SIZE: 10pt;
+	FONT-FAMILY: Verdana;
+	TEXT-ALIGN: right;
+	VERTICAL-ALIGN: top;
+	WIDTH: 0%;
+	padding : 3px 10px 3px 3px;
+}
+
+/* Ячейка с названием поля, обязательного для ввода */
+td.FieldTitleRequired {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 10pt;
+	FONT-FAMILY: Verdana;
+	TEXT-ALIGN: right;
+	VERTICAL-ALIGN: top;
+	padding : 3px 10px 3px 3px;
+	WIDTH: 0%;
+}
+
+/*
+        Ячейка с названием поля, которое может быть выровнено по центру поля ввода,
+   используется для полей ввода высотой в одну строку
+*/
+td.FieldTitleMiddle {
+	FONT-WEIGHT: normal;
+	FONT-SIZE: 10pt;
+	FONT-FAMILY: Verdana;
+	TEXT-ALIGN:right;
+	VERTICAL-ALIGN: top;
+	padding : 3px 10px 3px 3px;
+	WIDTH:0%;
+}
+
+/*
+        Ячейка с названием поля, обязательного для ввода, которое может быть выровнено по центру поля ввода,
+   используется для полей ввода высотой в одну строку
+*/
+td.FieldTitleRequiredMiddle {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 10pt;
+	FONT-FAMILY: Verdana;
+	TEXT-ALIGN:        right;
+	VERTICAL-ALIGN: middle;
+	padding : 3px 10px 3px 3px;
+	WIDTH:        0%;
+}
+
+
+/* ячейка с полем для ввода. Поле типа INPUT */
+td.FieldContent {
+	width: 100%;
+	PADDING-RIGHT: 5px;
+}
+
+
+/*td.FieldContent input {
+        width: 100%;
+        PADDING-RIGHT: 5px;
+}
+*/
+/* ячейка с полем для ввода. Поле типа SELECT */
+td.FieldContent select{
+	width: 100%;
+}
+
+/* ячейка с полем для ввода. Поле типа textarea */
+td.FieldContent textarea{
+	width: 100%;
+}
+
+.currentPage {
+	COLOR: red
+}
+.otherPage {
+
+}
+.upperBarEmptyCell {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-BOTTOM: #000000 1pt solid
+}
+.upperBarCell {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-RIGHT: 1px; PADDING-LEFT: 1px; FONT-SIZE: 11pt; BACKGROUND: #c0c0c0; BORDER-BOTTOM: #000000 1pt solid
+}
+.upperBarSelectedCell {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-RIGHT: 1px; PADDING-LEFT: 1px; FONT-SIZE: 11pt; BACKGROUND: #c0c0c0; COLOR: red; BORDER-BOTTOM: #000000 1pt solid
+}
+.upperBarTitleCell {
+	BORDER-RIGHT: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 11pt; PADDING-BOTTOM: 10px; BORDER-LEFT: #000000 1pt solid
+}
+.upperBarNavigationCell {
+	BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid
+}
+.upperBarNavigationRightCell {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; BACKGROUND: #e6e6e6; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: right
+}
+.mainFormHeader {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 8pt; BACKGROUND: #e6e6e6; BORDER-BOTTOM: #000000 1pt solid
+}
+.mainFormHeaderLeft {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 8pt; BACKGROUND: #e6e6e6; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid
+}
+.mainFormHeaderCenter {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 8pt; BACKGROUND: #e6e6e6; WIDTH: 25px; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: center
+}
+
+
+.mainFormCell {
+	FONT-SIZE: 9pt;
+	VERTICAL-ALIGN: top;
+	PADDING: 3px;
+}
+
+.mainFormCenterCell {
+	FONT-SIZE: 9pt;
+	VERTICAL-ALIGN: top;
+	TEXT-ALIGN: center;
+	PADDING: 3px;
+}
+
+table.ImagesList {
+	MARGIN-TOP: 4px;
+}
+
+table.ImagesList td{
+	FONT-SIZE: 8pt;
+	VERTICAL-ALIGN: top;
+	TEXT-ALIGN: center;
+	PADDING: 3px;
+	BORDER-LEFT:         #FFFFFF 1pt solid;
+	BORDER-TOP:         #FFFFFF 1pt solid;
+	BORDER-RIGHT:         #888888 1pt solid;
+	BORDER-BOTTOM:         #888888 1pt solid;
+}
+
+table.ImagesList td.last{
+	FONT-SIZE: 8pt;
+	VERTICAL-ALIGN: top;
+	TEXT-ALIGN: left;
+	PADDING: 3px;
+	BORDER-LEFT:         #FFFFFF 1pt solid;
+	BORDER-TOP:         #FFFFFF 1pt solid;
+	BORDER-RIGHT:         #888888 1pt solid;
+	BORDER-BOTTOM:         #888888 1pt solid;
+}
+
+.mainFormCenterCellDouble {
+	FONT-SIZE: 8pt; VERTICAL-ALIGN: top; WIDTH: 40px; TEXT-ALIGN: center
+}
+.mainFormLeftCell {
+	PADDING-LEFT: 5px; FONT-SIZE: 8pt; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid
+}
+.mainFormRightCell {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-RIGHT: 5px; FONT-SIZE: 8pt; VERTICAL-ALIGN: top
+}
+.mainFormZeroListCell {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-LEFT: 5px; FONT-SIZE: 10pt; BORDER-LEFT: #000000 1pt solid; FONT-STYLE: italic
+}
+.small {
+	FONT-WEIGHT: bold; FONT-SIZE: 9pt
+}
+.evenRow {
+	BACKGROUND: #e6e6e6
+}
+.oddRow {
+	BACKGROUND: #f0f0f0
+}
+.downBarCell {
+	BORDER-TOP: #000000 1pt solid; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-BOTTOM: #000000 1pt solid
+}
+.downBarCellLeft {
+	BORDER-TOP: #000000 1pt solid; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid
+}
+.downBarNavigationCell {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; PADDING-BOTTOM: 4px; BORDER-LEFT: #000000 1pt solid; PADDING-TOP: 4px; BORDER-BOTTOM: #000000 1pt solid
+}
+.maxLength {
+	PADDING-LEFT: 10px; FONT-SIZE: 7pt
+}
+.chapterRow {
+	BACKGROUND: #cdcdcd; PADDING-BOTTOM: 25px; PADDING-TOP: 25px
+}
+.chapterCell {
+	BORDER-RIGHT: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 12pt; BORDER-LEFT: #000000 1pt solid; COLOR: #1e1e8b; TEXT-ALIGN: center
+}
+.link {
+
+	COLOR: #3366ff;
+}
+
+TD.mainTabHeader {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 8pt;
+	BACKGROUND: #9999cc;
+	COLOR: #ffffff;
+	TEXT-ALIGN: center;
+	PADDING-LEFT: 3px;
+	PADDING-RIGHT: 3px;
+}
+
+TD.mainTabHeader A:normal, TD.mainTabHeader A:visited,TD.mainTabHeader A:hover {
+	TEXT-DECORATION: underline;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #9999cc;
+	COLOR: #ffffff;
+}
+.light {
+	BACKGROUND: #efefef;
+}
+.dark {
+	BACKGROUND: #dddddd;
+}
+
+
+body.print tr.light td,
+body.print tr.dark td
+body.print tr.new_list td {
+	BACKGROUND: #ffffff;
+
+}
+body.print table.ListForm, body.print table.ListForm tr, body.print table.ListForm td {
+	BORDER: #000000 1px solid;
+	padding:2px;
+}
+.upNaviCell {
+	PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #dddddd;
+}
+.downNaviCell {
+	PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #dddddd;
+}
+.currentPage {
+	COLOR: red
+}
+.downTabText {
+	FONT-SIZE: 9pt
+}
+.downTabCell {
+	TEXT-ALIGN: left
+}
+.smallForm {
+	MARGIN-TOP: 0px; FONT-SIZE: 10pt; MARGIN-BOTTOM: 0px
+}
+.mainFormZeroCell {
+	PADDING-LEFT: 5px; FONT-SIZE: 10pt; FONT-STYLE: italic; TEXT-ALIGN: left
+}
+.photoReportTitle {
+	FONT-WEIGHT: bold; COLOR: #3333ff; TEXT-DECORATION: underline
+}
+.videoReportTitle {
+	FONT-WEIGHT: bold; COLOR: black; TEXT-ALIGN: center
+}
+.table-style {
+	BORDER-RIGHT: #000004 0px solid; BORDER-TOP: #000004 0px solid; FONT-SIZE: 11px; BORDER-LEFT: #000004 0px solid; BORDER-BOTTOM: #000004 0px solid; FONT-FAMILY: arial; BACKGROUND-COLOR: #ff00ff
+}
+.head {
+	FONT-WEIGHT: bold; COLOR: #ffffff; TEXT-ALIGN: left
+}
+.head:hover {
+	FONT-WEIGHT: bold; COLOR: #ffffff; TEXT-ALIGN: left
+}
+.head:visited {
+	FONT-WEIGHT: bold; COLOR: #ffffff; TEXT-ALIGN: left
+}
+.personHead {
+	FONT-WEIGHT: bold; COLOR: #000099; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+.personName {
+	FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+.personRole {
+	FONT-WEIGHT: bold; COLOR: #000099; TEXT-DECORATION: none
+}
+.smallGrey {
+	FONT-SIZE: 8px; COLOR: #cccccc; TEXT-DECORATION: none
+}
+.remark {
+	FONT-SIZE: 8pt
+}
+.pseudoBlackLink {
+	CURSOR: hand; COLOR: #000000; TEXT-DECORATION: underline
+}
+.boldStyle {
+	FONT-WEIGHT: bold
+}
+.addTableCell {
+	FONT-SIZE: 9pt
+}
+.addTableLeftCell {
+	FONT-SIZE: 9pt; TEXT-ALIGN: left
+}
+.mainTabHeader1 {
+	BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: center
+}
+.light1 {
+	BACKGROUND: #e6e6e6
+}
+.dark1 {
+	BACKGROUND: #f0f0f0
+}
+.upNaviCell1 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; PADDING-BOTTOM: 4px; BORDER-LEFT: #000000 1pt solid; PADDING-TOP: 4px; BORDER-BOTTOM: #000000 1pt solid
+}
+.downNaviCell1 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; PADDING-BOTTOM: 4px; BORDER-LEFT: #000000 1pt solid; PADDING-TOP: 4px; BORDER-BOTTOM: #000000 1pt solid
+}
+.downTabText1 {
+	FONT-SIZE: 10pt
+}
+.mainFormCell1 {
+	PADDING-RIGHT: 3px; PADDING-LEFT: 3px; FONT-SIZE: 10pt; VERTICAL-ALIGN: top
+}
+.mainFormZeroCell1 {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-LEFT: 5px; FONT-SIZE: 10pt; BORDER-LEFT: #000000 1pt solid; FONT-STYLE: italic
+}
+.mainFormNarrowCell {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 10pt; VERTICAL-ALIGN: top
+}
+.addButtonCell {
+	FONT-SIZE: 9pt; TEXT-ALIGN: right
+}
+.chapterCell1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12pt; COLOR: #1e1e8b; TEXT-ALIGN: center
+}
+.searchTableCell {
+	FONT-SIZE: 9pt; VERTICAL-ALIGN: middle
+}
+.smallImg {
+	MARGIN-RIGHT: 5px
+}
+.ttl {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #00366e; FONT-FAMILY: Arial,Verdana,Times
+}
+.text1 {
+	FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times
+}
+.master {
+	BACKGROUND: #dfe5ea
+}
+.slave {
+	BACKGROUND: #eff2f5
+}
+UL.listtype {
+	LIST-STYLE-IMAGE: url(./calendar_tree/mmarr.gif)
+}
+.mainFormHeader1 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-WEIGHT: bold; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: center
+}
+.mainFormCell2 {
+	FONT-SIZE: 10pt; VERTICAL-ALIGN: top
+}
+.mainFormListLeftCell {
+	FONT-SIZE: 10pt; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid; TEXT-ALIGN: center
+}
+.mainFormRightCell1 {
+	BORDER-RIGHT: #000000 1pt solid; PADDING-RIGHT: 5px; FONT-SIZE: 10pt; VERTICAL-ALIGN: top
+}
+.small1 {
+	FONT-SIZE: 9pt
+}
+.pseudoLink1 {
+	CURSOR: hand;
+}
+.searchTableRightCell {
+	FONT-SIZE: 10pt; VERTICAL-ALIGN: middle; TEXT-ALIGN: right
+}
+.mainFormLeftCell1 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 10pt; BACKGROUND: #e6e6e6; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: center
+}
+.mainFormRightCell2 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 10pt; BACKGROUND: #e6e6e6; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid; TEXT-ALIGN: center
+}
+.mainFormLeftCell2 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 10pt; BACKGROUND: #e6e6e6; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid; BORDER-BOTTOM: #000000 1pt solid
+}
+.linkButton {
+	MARGIN-TOP: 5px; FONT-SIZE: 9pt
+}
+.upperTableCell {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt
+}
+.typeCell {
+	FONT-WEIGHT: bold; FONT-SIZE: 12pt; BACKGROUND: #cdcdcd; COLOR: #1e1e8b; TEXT-ALIGN: center
+}
+.nameCell {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; BACKGROUND: #e6e6e6; TEXT-ALIGN: center
+}
+.titleCell {
+	FONT-SIZE: 10pt; BACKGROUND: #f0f0f0; VERTICAL-ALIGN: top
+}
+.linkedDocTable {
+	DISPLAY: none
+}
+.chapterTitleCell {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; BACKGROUND: #cdcdcd
+}
+.mainFormHeader2 {
+	BORDER-RIGHT: #000000 1pt solid; BORDER-TOP: #000000 1pt solid; FONT-SIZE: 9pt; BACKGROUND: #e6e6e6; BORDER-BOTTOM: #000000 1pt solid
+}
+.mainFormLeftCell3 {
+	PADDING-LEFT: 5px; FONT-SIZE: 10pt; VERTICAL-ALIGN: top; BORDER-LEFT: #000000 1pt solid
+}
+.pseudoLink {
+	CURSOR: hand; COLOR: #003e7d; TEXT-DECORATION: underline
+}
+.titleForPic {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; WIDTH: 100%; COLOR: #00366e; FONT-FAMILY: Arial,Verdana,Times
+}
+.titleForDoc {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times; TEXT-ALIGN: center
+}
+.keyForPic {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; WIDTH: 50%; FONT-FAMILY: Verdana,Arial,Times; TEXT-ALIGN: right
+}
+.wordForPic {
+	PADDING-LEFT: 10px; FONT-SIZE: 12px; WIDTH: 50%; TEXT-ALIGN: left
+}
+.titleForGallery {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #00366e; FONT-FAMILY: Arial,Verdana,Times
+}
+.tdForGallery {
+	FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times
+}
+.currentPage {
+	FONT-WEIGHT: bold;
+}
+.titleForReport {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; FONT-FAMILY: Arial,Verdana,Times
+}
+.tdForReport {
+	FONT-SIZE: 12px; FONT-FAMILY: Verdana,Arial,Times
+}
+.currentPage {
+	FONT-WEIGHT: bold
+}
+.hrLight {
+	COLOR: #9dadbe; HEIGHT: 1px; decoration: noshade
+}
+.titleForReports {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #00366e; FONT-FAMILY: Arial,Verdana,Times
+}
+A.hrefForEnterprise {
+	COLOR: #003e7d; TEXT-DECORATION: underline
+}
+A.hrefForEnterprise:hover {
+	COLOR: #000099
+}
+A.hrefForEnterprise:visited {
+	COLOR: #003e7d
+}
+
+/*'вЁ<Ё ¤<п дЁ<мва */
+table.SearchForm {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 8pt;
+	COLOR: #7a95af;
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+table.SearchForm td.FieldContent {
+	text-align : left;
+	vertical-align : middle;
+	width: 0%;
+}
+
+table.SearchForm td.FieldContent INPUT.main {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	width: 400px;
+	FONT-SIZE: 8pt;
+
+}
+table.SearchForm td.FieldContent INPUT.aux {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	width: 80px;
+	FONT-SIZE: 8pt;
+
+}
+table.SearchForm td.FieldContent INPUT.date {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	width: 100px;
+	font-family : Verdana;
+	FONT-SIZE: 8pt;
+}
+
+INPUT.inp_button {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	FONT-SIZE: 8pt;
+}
+
+
+/*'вЁ<Ё ¤<п дR<а¬л ¤RЎ ў<_-Ёп*/
+table.AddForm {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 8pt;
+	COLOR: #7a95af;
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+table.AddForm td.FieldTitle {
+	text-align : right;
+	vertical-align : top;
+}
+
+table.AddForm td.FieldContent {
+	text-align : left;
+	vertical-align : middle;
+	WIDTH: 0%;
+}
+
+table.AddForm td.FieldContent INPUT.main {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	width: 400px;
+	FONT-SIZE: 8pt;
+
+}
+table.AddForm td.FieldContent INPUT.aux {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	width: 20px;
+	FONT-SIZE: 8pt;
+
+}
+table.AddForm td.FieldContent INPUT.date {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	FONT-SIZE: 8pt;
+}
+
+td.mainFormCell INPUT.main {
+	/*        border : 1 solid #7a95af;*/
+	font-style : normal;
+	font-family : Verdana;
+	width: 100%;
+	FONT-SIZE: 8pt;
+
+}
+.Welcome {
+	font-style : normal;
+	font-family : Verdana;
+	FONT-SIZE: 24pt;
+	padding: 20px;
+	text-align: center;
+}
+TABLE.SearchForm {
+	text-align: center;
+}
+
+TABLE.SearchForm TD.Title {
+	PADDING-RIGHT:                2px;
+	TEXT-ALIGN:                        right;
+	VERTICAL-ALIGN:        middle;
+	WIDTH:                                0px;
+}
+
+TABLE.SearchForm TD.Field {
+	TEXT-ALIGN:                        left;
+	VERTICAL-ALIGN:        middle;
+}
+
+TABLE.SearchForm TD.Buttons {
+	TEXT-ALIGN:                        center;
+	VERTICAL-ALIGN:        middle;
+	PADDING-TOP:                5px;
+	PADDING-BOTTOM:        5px;
+}
+
+
+TABLE.SearchForm TD.Field INPUT.Stretched {
+	WIDTH: 100%;
+}
+
+TD.PageContent {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 5px;
+	PADDING-TOP: 10px;
+}
+
+.PortletHelp {
+	FONT-WEIGHT: bold; FONT-SIZE: 8pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 2px
+}
+.EditForm {
+	FONT-SIZE: 1em
+}
+
+select.ShrinkField {
+	TEXT-ALIGN: left;
+	width: 100px;
+}
+
+input.ShrinkField {
+	TEXT-ALIGN: left;
+
+}
+
+
+.EditForm COL.TitleCell {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	VERTICAL-ALIGN: middle;
+	PADDING-TOP: 2px;
+	WHITE-SPACE: nowrap;
+	TEXT-ALIGN: left;
+}
+.EditForm TD.TitleMultiCell {
+	VERTICAL-ALIGN: top
+}
+
+.EditForm TD.TitleRequiredCell {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	VERTICAL-ALIGN: middle;
+	PADDING-TOP: 2px;
+	WHITE-SPACE: nowrap;
+	TEXT-ALIGN: left;
+	FONT-WEIGHT: bold;
+}
+
+.EditForm TD.TitleCellNoWrap {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	VERTICAL-ALIGN: middle;
+	PADDING-TOP: 2px;
+	WHITE-SPACE: nowrap;
+	TEXT-ALIGN: left;
+}
+
+
+.EditForm TD.TitleMultiRequiredCell {
+	FONT-WEIGHT: bold; VERTICAL-ALIGN: top
+}
+.EditForm COL.ContentCell {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; VERTICAL-ALIGN: top; WIDTH: 100%; PADDING-TOP: 2px
+}
+
+.EditForm TD.ContentCell INPUT {
+	FONT-SIZE: 1em; WIDTH: 100%
+}
+
+
+.EditForm TD.ContentCell INPUT.Narrow {
+	FONT-SIZE: 1em;
+	WIDTH: 20px;
+}
+
+SELECT {
+	FONT-SIZE: 1em
+}
+TEXTAREA {
+	FONT-SIZE: 1em; WIDTH: 100%
+}
+.EditForm TD.ContentCell INPUT.FieldDate {
+	WIDTH: 7em
+}
+.EditForm TD.ContentCell SELECT.FieldPulishType {
+	WIDTH: 10em
+}
+.ButtonsForm TD {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; PADDING-TOP: 2px
+}
+.ListAddBarTopForm {
+	FONT-SIZE: 1.2em; MARGIN-BOTTOM: 3px; WIDTH: 100%
+}
+.ListAddBarTopForm TD.AddButtonCell {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; PADDING-TOP: 2px; TEXT-ALIGN: right
+}
+.ListAddBarTopForm AddButtonText {
+	COLOR: #000000; TEXT-DECORATION: underline
+}
+.ListAddBarBottomForm {
+	FONT-SIZE: 0.9em; WIDTH: 100%
+}
+.ListAddBarBottomForm TD.AddButtonCell {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	PADDING-TOP: 2px;
+	TEXT-ALIGN: left;
+}
+.ListAddBarBottomForm AddButtonText {
+	COLOR: #000000;
+	TEXT-DECORATION: underline;
+}
+.ListNavigationForm TD.NavigationCell {
+	PADDING-LEFT: 5px;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 0.9em;
+	BACKGROUND-COLOR: #dddddd
+}
+.ListNavigationForm TD.NavigationCell .PageNumberText {
+
+}
+.ListNavigationForm TD.NavigationCell .PageNumberCurrentText {
+	COLOR: #ff0000
+}
+.ListForm {
+	MARGIN-TOP: 0px;
+	MARGIN-BOTTOM: 0px;
+	WIDTH: 100%;
+}
+.ListForm .Light {
+	BACKGROUND-COLOR: #efefef;
+}
+.ListForm .Dark {
+	BACKGROUND-COLOR: #dddddd;
+}
+.ListForm .new_list  {
+	BACKGROUND-color: #ddffdd;
+}
+.ListForm .Group {
+
+}
+.ListForm .ListCell {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	PADDING-BOTTOM: 3px;
+	VERTICAL-ALIGN: top;
+	PADDING-TOP: 3px;
+}
+.ListForm .DataListCell,
+tr.dark td, tr.light td, tr.new_list td
+{
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	PADDING-BOTTOM: 3px;
+	VERTICAL-ALIGN: middle;
+	PADDING-TOP: 3px;
+	border-right : 2px solid White;
+	border-bottom : 2px solid White;
+	text-align:center;
+}
+tr.dark td.Link, tr.light td.Link {
+	text-align:left;
+}
+.ListForm .ListEmptyCell {
+	PADDING-LEFT: 5px;
+	FONT-STYLE: italic;
+	TEXT-ALIGN: left;
+}
+.ListForm TD.HeaderCell {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+	COLOR: #DDDDDD;
+	BACKGROUND-COLOR: #9999cc;
+	TEXT-ALIGN: center;
+	border-right : 2px solid White;
+	border-bottom : 2px solid White;
+}
+.ListForm TD.HeaderCell_Req {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+	COLOR: #FFFFFF;
+	BACKGROUND-COLOR: #9999cc;
+	TEXT-ALIGN: center;
+	border-right : 2px solid White;
+	border-bottom : 2px solid White;
+}
+.ListForm TD.HeaderCell A {
+	FONT-WEIGHT: bold;
+	VERTICAL-ALIGN: top;
+	COLOR: #DDDDDD;
+	BACKGROUND-COLOR: #9999cc;
+	TEXT-DECORATION: none;
+}
+.ListForm TD.HeaderCell_Req A {
+	FONT-WEIGHT: bold;
+	VERTICAL-ALIGN: top;
+	COLOR: #FFFFFF;
+	BACKGROUND-COLOR: #9999cc;
+	TEXT-DECORATION: none;
+}
+
+.ListForm .ImagesList {
+	MARGIN-TOP: 4px
+}
+TABLE.ImagesList TD {
+	BORDER-RIGHT: #888888 1pt solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #ffffff 1pt solid;
+	PADDING-LEFT: 3px;
+	FONT-SIZE: 0.8em;
+	PADDING-BOTTOM: 3px;
+	VERTICAL-ALIGN: top;
+	BORDER-LEFT: #ffffff 1pt solid;
+	PADDING-TOP: 3px;
+	BORDER-BOTTOM: #888888 1pt solid;
+	TEXT-ALIGN: center
+}
+.no_border {
+	color:#000000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	border:0;
+}
+input, select, textarea {
+	color:#000000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	border:1px solid #7A7A7A;
+}
+.admin_refresh_button
+{
+	color:#000000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	border:1px solid #7A7A7A;
+	height:18px;
+	width: 180px;
+}
+.admin_del_button
+{
+	background-color : #fc6700;
+	color:#000000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	border:1px solid #7A7A7A;
+	height:18px;
+	width: 180px;
+}
+.admin_add_button
+{
+	background-color : #3CB371;
+	color:#000000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	border:1px solid #7A7A7A;
+	height:18px;
+	width: 180px;
+}
+td.error_msg
+{
+	background-color : Red;
+	text-align : center;
+	color : #FFFFF0;
+	font-weight : bold;
+	padding : 3px 3px 3px 3px;
+}
+td.error_list
+{
+	text-align : center;
+	background-color : #FFCCCC;
+	font-weight : bold;
+	padding : 3px 3px 3px 3px;
+}
+div.err
+{
+	color : #ff0000;
+	text-align : left;
+	font-weight : bold;
+	padding : 3px 3px 3px 3px;
+}
+.not_null
+{
+	font-weight : bold;
+	width:25%;
+}
+.maybe_null
+{
+	width:25%;
+}
+.control_form
+{
+	width:75%;
+}
+div.pagenatorBlock
+{
+	margin:5px 0 5px 0;
+	padding:0;
+}
+table.button_table
+{
+	height:30px;
+}
+table.button_table td
+{
+	padding:2px;
+	vertical-align:middle;
+	height:100%;
+}
+/*древовидный АРМ*/
+.tree1, body.print table.ListForm td.tree1
+{
+	padding:5px 0 0 0;
+	border-width:0;
+}
+.tree1 .Link
+{
+	font-weight:bold;
+}
+td.tree2, body.print table.ListForm td.tree2
+{
+	padding:0 0 0 15px;
+	border-width:0;
+}
+.tree3, body.print table.ListForm td.tree3
+{
+	padding:0 0 0 30px;
+	border-width:0;
+}
+.tree4, body.print table.ListForm td.tree4
+{
+	padding:0 0 0 45px;
+	border-width:0;
+}
+.tree5, body.print table.ListForm td.tree5
+{
+	padding:0 0 0 60px;
+	border-width:0;
+}
+.tree6, body.print table.ListForm td.tree6
+{
+	padding:0 0 0 75px;
+	border-width:0;
+}
+body.print table.ListForm td.tree1 td,
+body.print table.ListForm td.tree2 td,
+body.print table.ListForm td.tree3 td,
+body.print table.ListForm td.tree4 td,
+body.print table.ListForm td.tree5 td,
+body.print table.ListForm td.tree6 td
+{
+	border-width:0;
+}

@@ -1,0 +1,13 @@
+SetEnv g_INC "/var/www/vhosts/ttfr.ru/subdomains/admin/httpdocs/inc_admin/"
+SetEnv PATH_INC_HOST "/var/www/vhosts/ttfr.ru/subdomains/admin/httpdocs/inc/"
+SetEnv LOG_DIR "/var/www/vhosts/ttfr.ru/subdomains/admin/httpdocs/logs/"
+ErrorDocument 404 /404.html
+DirectoryIndex  index.html index.php
+
+AuthType Basic
+AuthName "TTFR-admin"
+#AuthUserFile "/var/www/vhosts/ttfr.ru/subdomains/admin/httpdocs/inc/.htpasswd"
+<Limit GET POST>
+        require valid-user
+</Limit>
+

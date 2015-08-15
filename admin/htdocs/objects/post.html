@@ -1,0 +1,151 @@
+<?
+define("ITEMS_ON_PAGE", 10);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+include_once(PATH_INC."func/admin.php");
+
+$pe_id=$over_id[count($over_id)];
+//echo"pe_id=$pe_id<br>";
+$sel_ent="SELECT entity_id FROM post_entities WHERE id = $pe_id";
+//echo"sel_ent=$sel_ent<br>";
+$res_ent=db_getArray($conn, $sel_ent, 2);
+//echo"id=".$res_ent['ENTITY_ID']."<br>";
+$id=$res_ent['ENTITY_ID'];
+if($save && $id)
+   {
+   $del_q="delete from post_entities_column where post_entities_id=$pe_id";
+   $del=db_query($conn, $del_q);
+   if($del)
+      {
+      foreach($post as $k=>$v)
+           {
+           //echo"$k=$v<br>";
+           if($v)
+              $ins=db_insert($conn, "post_entities_column", array("post_ENTITies_ID", "COLUMN_ID" ),
+                                                               array($pe_id, $k),
+                                                               array("int", "int"));//, array("show_ins"=>1));
+           }
+      }
+	db_commit($conn);
+   }
+
+$res_tab=object_info($conn, $id);
+$i=0;
+adm_navigation($conn, $our_arm_id, $sub_arm);
+            div('class="PortletTitle" align="center"');
+                  echo $entity_structure[0]['ARM_NAME'];
+            divend();
+//echo"<pre>";
+//print_r($res_tab);
+form(g_URL);
+table('cellpadding="3"  class="ListForm"');
+foreach($res_tab as $k=>$v)
+        {
+        //echo"$k=$v<br>";
+
+        $res_col=$res_tab['COLS'][$v['TABLE_ID']];
+
+        if($v['MAIN'])
+           {
+           trtd('', 'class="HeaderCell" colspan="2"');
+           echo $v['ABOUT'];
+           tdtr();
+           foreach($res_col as $k1=>$v1)
+                  {
+                   $sel_post_q="select * from post_entities_column where post_ENTITies_ID=$pe_id AND  column_id=".$v1['COLUMN_ID'];
+                   //echo"sel_post_q=$sel_post_q<br>";
+                   $res_post=db_getArray($conn, $sel_post_q, 2);
+                   if ($k1%2 == 0)
+                       $trclass = "dark";
+                   else
+                       $trclass = "light";
+                   trtd('class="'.$trclass.'"');
+                       echo $v1['ABOUT'];
+                       tdtd();
+                       forminput("checkbox", "post[".$v1['COLUMN_ID']."]", 1, '', 'size="4" maxlength="6"'.($res_post['ID']?" checked":""));
+                       tdtr();
+                       $i++;
+                   }
+
+           }
+        elseif($v['ABOUT'])
+            {
+            //forminput("checkbox", "column_ar[$i]", "");
+            trtd('', 'class="HeaderCell"');
+            echo $v['ABOUT'];
+            tdtd('class="HeaderCell"');
+           foreach($res_col as $k1=>$v1)
+                  {
+
+					//echo"$k1=<pre>";
+					//print_r($v1);
+					//br();
+
+				if($v1['REF_COLUMN_ID']==NAV_ID && DEFINED("NAV_INDEX")) 
+					{
+					$sel_post_q="select * from post_entities_column where post_ENTITies_ID=$pe_id AND  column_id=".$v1['COLUMN_ID'];
+					$res_post=db_getArray($conn, $sel_post_q, 2);
+					forminput("checkbox", "post[".$v1['COLUMN_ID']."]", 1, "", ($res_post['ID']?"checked":""));
+					}
+				}
+			//echo"NAV_ID=".NAV_ID;
+            tdtr();
+            $i++;
+            }
+        }
+           trtd('', 'colspan="3"');
+           echo addit_string_form(array("addit_string_ar"=>$addit_string_ar, "ret_format"=>"form_hidden" ));
+           forminput("hidden", "save", 1);
+           forminput("submit", "", "Сохранить");
+           tdtr();
+           tableend();
+           formend();
+
+/*
+foreach($res_tab as $k=>$v)
+        {
+
+        //echo"$k=$v<br>";
+        $res_col=$res_tab['COLS'][$v['TABLE_ID']];
+        if($v['MAIN'])
+           {
+           echo $v['ABOUT'];
+           form(g_URL);
+           echo addit_string_form(array("ret_format"=>"form_hidden", "addit_string_ar"=>$addit_string_ar));
+           table('cellpadding="2" border = "0" class="ListForm"');
+           foreach($res_col as $k1=>$v1)
+                   {
+                   $sel_post_q="select post from ".TABLE_PRE."search_post where entity_id=".$over_id[1]." and column_id=".$v1['COLUMN_ID'];
+                       //echo"sel_post_q=$sel_post_q<br>";
+                   $res_post=db_getArray($conn, $sel_post_q, 2);
+                   if ($k1%2 == 0)
+                       $trclass = "dark";
+                   else
+                       $trclass = "light";
+                   trtd('class="'.$trclass.'"');
+                       echo $v1['ABOUT'];
+                       tdtd();
+                       forminput("text", "post[".$v1['COLUMN_ID']."]", $res_post['post'], '', 'size="4" maxlength="6"');
+                       tdtr();
+                       $i++;
+                   }
+           trtd('', 'colspan="3"');
+           forminput("hidden", "save", 1);
+           forminput("hidden", "id", $id);
+           forminput("submit", "", "Сохранить");
+
+           tdtr();
+           tableend();
+           formend();
+           }
+        elseif($v['ABOUT'])
+            {
+            //forminput("checkbox", "column_ar[$i]", "");
+            echo $v['ABOUT'];
+            br();
+            $i++;
+            }
+        }
+*/
+adm_navigation_end();
+?>

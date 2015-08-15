@@ -1,0 +1,37 @@
+<?
+//var_dump($_POST);
+//define("ITEMS_ON_PAGE", 10);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+$jscript[]="/js/TopicM.js";
+//echo ITEMS_ON_PAGE;
+if($our_ac_id && $our_arm_id)
+   {
+   $entity_structure = get_entity_structure($conn, $our_arm_id, $our_ac_id);
+
+   //$SubArms=SubArms_nav($conn, $over_id, $over_arm_id, $entity_structure, $our_arm_id);
+
+   $showsel = get_entity_relation($conn, $entity_structure);
+
+   $entity_info_ar=array("complex"=>$complex, "entity_structure"=>$entity_structure, "our_ent_id"=>$our_ent_id, "sort_by"=>$sort_by, "new"=>$new);
+   $entity_info=get_for_list($conn, $entity_info_ar);
+   adm_navigation($conn, $our_arm_id, $lookup, $print, array("no_nav"=>1));
+   table('height="100%"');
+   trtd();
+   table('border="0" height="100%" cellpadding="3"');
+   form('', '', 'name="topic" id="topic"');
+   foreach($entity_info['form_ar'] as $k_l=>$v_l)
+                 {
+                 //echo $v_l['COL_ABOUT'];
+                 show_control($conn, $v_l, array("method"=>$method, "from"=>($from=="topic"?$from:"topicm"), "val_ar"=>$res_q, "error_form"=>$error_form, "string_id"=>$our_ent_id, "form_name"=>"edit_form"));
+                 }
+
+   formend();
+   tableend();
+   tdtd();
+   rasp(1, 400);
+   tdtr();
+   tableend();
+   adm_navigation_end();
+   }
+?>

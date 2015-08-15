@@ -1,0 +1,10 @@
+<?
+//var_dump($_POST);
+//define("ITEMS_ON_PAGE", 10);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+include_once(PATH_INC."func/admin.php");
+adm_navigation($conn, $our_arm_id, "", $print);
+include(PATH_INC."search.php");
+adm_navigation_end();
+?>

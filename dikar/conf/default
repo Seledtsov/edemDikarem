@@ -1,0 +1,101 @@
+<VirtualHost *:80>
+
+	ServerAdmin admin@edemdikarem.ru
+	ServerName edemdikarem.ru
+	ServerAlias www.edemdikarem.ru
+
+	DocumentRoot /var/www/dikar/htdocs
+
+	RewriteLog /var/www/logs/edem.rewrite.log
+	RewriteLogLevel 0
+
+	RewriteEngine on
+	RewriteMap redirects txt:/var/www/dikar/conf/redirects.txt
+	RewriteRule ^/((www\.)?.*(index\.files).*) http://${redirects:$1} [R=permanent,L]
+
+
+	<Directory /var/www/dikar/htdocs>
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+
+	ErrorLog /var/www/logs/edem.error.log
+	LogLevel warn
+	CustomLog /var/www/logs/edem.access.log combined
+
+</VirtualHost>
+
+<VirtualHost *:80>
+
+	ServerAdmin admin@edemdikarem.ru
+	ServerName admin.edemdikarem.ru
+
+	DocumentRoot /var/www/admin/htdocs
+
+	<Directory /var/www/admin/htdocs>
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+
+	ErrorLog /var/log/apache2/adm.edem.error.log
+	LogLevel warn
+	CustomLog /var/log/apache2/adm.edem.access.log combined
+
+</VirtualHost>
+
+<VirtualHost *:80>
+
+	ServerAdmin admin@oooinex.ru
+	ServerName oooinex.ru
+	ServerAlias www.oooinex.ru
+
+	DocumentRoot /var/www/oooinex.ru/htdocs
+
+	<Directory /var/www/oooinex.ru/htdocs>
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+
+	ErrorLog /var/log/apache2/inex.error.log
+	LogLevel warn
+	CustomLog /var/log/apache2/inex.access.log combined
+
+</VirtualHost>
+
+<VirtualHost *:80>
+
+	ServerAdmin admin@oooinex.ru
+	ServerName win.oooinex.ru
+	ServerAlias www.win.oooinex.ru
+
+	DocumentRoot /var/www/peterwin
+
+	<Directory /var/www/peterwin>
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+
+	ErrorLog /var/log/apache2/win.error.log
+	LogLevel warn
+	CustomLog /var/log/apache2/win.access.log combined
+
+</VirtualHost>
+
+<VirtualHost *:80>
+
+	ServerAdmin admin@oooinex.ru
+	ServerName admin.oooinex.ru
+	ServerAlias adm.oooinex.ru
+
+	DocumentRoot /var/www/admin/htdocs
+
+	<Directory /var/www/admin/htdocs>
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+
+	ErrorLog /var/log/apache2/adm.error.log
+	LogLevel warn
+	CustomLog /var/log/apache2/adm.access.log combined
+
+</VirtualHost>

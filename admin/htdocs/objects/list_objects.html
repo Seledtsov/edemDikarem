@@ -1,0 +1,87 @@
+<?
+
+//define("ITEMS_ON_PAGE", 10);
+
+include(getenv("g_INC")."conf.php");
+
+include(PATH_INC."inc.php");
+
+
+
+if(!$page)
+
+    $page=1;
+
+adm_navigation($conn, $arm_id, $sub_arm);
+
+            div('class="PortletTitle" align="center"');
+
+                  echo $entity_structure[0]['ARM_NAME'];
+
+            divend();
+
+  //show_filter($conn, $arm_id, $g_url, $sort_by_search, $entity_structure, $showsel);
+
+  //show_entity_list($conn, $arm_id, $g_url, $search, $sort_by, $sort_by_search, $page, $entity_structure, $showsel, 1, $sub_arm);
+
+  //if ($sub_arm == "")
+
+
+
+$sel_count_obj="select count(id) as c from ".TABLE_PRE."objects ";
+
+$res_count_obj=db_getArray($conn, $sel_count_obj, 2);
+
+
+
+$pagelist=pagelist($res_count_obj['C'], ITEMS_ON_PAGE, $page);
+
+
+
+$sel_obj_q="select id as object_id, name, about from ".TABLE_PRE."objects order by name ";
+
+$sel_obj_q=db_limit($sel_obj_q, ($page-1)*ITEMS_ON_PAGE, ITEMS_ON_PAGE);
+
+$res_obj=db_getArray($conn, $sel_obj_q);
+
+table('cellpadding="2" border = "0" class="ListForm"');
+
+
+
+foreach($res_obj as $k=>$v)
+        {
+        if ($k%2 == 0)
+                   $trclass = "dark";
+        else
+                    $trclass = "light";
+        trtd('class="'.$trclass.'"');
+
+        echo $v['NAME'];
+
+        tdtd();
+
+        echo $v['ABOUT'];
+
+        tdtd();
+
+        //href("#", "Редактировать");
+
+        //tdtd();
+
+        href("search.html?id=".$v['OBJECT_ID'], "Индексация");
+
+        tdtr();
+
+        }
+
+
+
+tableend();
+
+if($pagelist)
+
+   echo $pagelist;
+
+adm_navigation_end();
+
+?>

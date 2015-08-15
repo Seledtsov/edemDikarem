@@ -1,0 +1,92 @@
+<?
+    if(getenv("g_INC"))
+        include_once(getenv("g_INC")."conf.php");
+    else
+        include_once($_SERVER['DOCUMENT_ROOT']."/inc/conf.php");
+    include(PATH_INC."inc.php");
+
+    $sel_q="select upper(c.name) as column_name, t.name as table_name from ".TABLE_PRE."columns c, ".TABLE_PRE."tables t  where c.id = $col_id and c.table_id = t.id";
+    $res=db_getArray ($conn, $sel_q, 2);
+    $file_info_q="select t.".$res['COLUMN_NAME'].",
+    t.".$res['COLUMN_NAME']."_size,
+    t.".$res['COLUMN_NAME']."_name,
+    t.".$res['COLUMN_NAME']."_height,
+    t.".$res['COLUMN_NAME']."_width,
+    ft.name as ft_name
+    from ".$res['TABLE_NAME']." t, ".TABLE_PRE."file_types ft where t.id=$our_ent_id and
+    ".$res['COLUMN_NAME']."_type_id=ft.id";
+
+    //echo"file_info_q=$file_info_q<br>";
+    $res_file=db_getArray($conn, $file_info_q, 2);
+    //echo '<pre>'; var_dump($res_file);
+    $file_type = $res_file['FT_NAME'];
+    $file=$res_file[$res['COLUMN_NAME'].'_NAME'];
+    $file=str_replace(array(" ", "(", ")", "[", "]", "[", "]", "-", "\"", "'"), "_", $file);
+    $file_size=$res_file[$res['COLUMN_NAME'].'_SIZE'];
+
+    header("Cache-Control: public, must-revalidate");
+    Header("Pragma: public");
+    if(!$show)
+    {
+        header("Content-Disposition: attachment; filename=\"$file\"");
+        header("Content-Length: $file_size");
+        Header("Content-type: application/octet-stream; name=\"$file\"");
+        header("Content-Transfer-Encoding: binary\n");
+        db_output_file_data ($conn, $res_file[$res['COLUMN_NAME']]);
+    }
+    else
+    {
+        if($h || $w){
+            /*header("Content-Disposition: inline; filename=\"$file\"");
+            header("Content-Length: $file_size");
+            Header("Content-type: $file_type; name=\"$file\"");
+            header("Content-Transfer-Encoding: binary\n");
+            db_output_file_data ($conn, $res_file[$res['COLUMN_NAME']]);
+        }else{*/
+            $q = 100;
+            $file_img = db_get_file_data($conn, $res_file[$res['COLUMN_NAME']], $file_size);
+            $w_src = $res_file[$res['COLUMN_NAME']."_WIDTH"];
+            $h_src = $res_file[$res['COLUMN_NAME']."_HEIGHT"];
+            //определение размера
+            if($w>0 && $h>0 ){
+                $w_dest = $w;
+                $h_dest = $h;
+            }elseif( $w>0){
+                // вычисление пропорций
+                $ratio = $w_src/$w;
+                $w_dest = round($w_src/$ratio);
+                $h_dest = round($h_src/$ratio);
+            }elseif( $h>0){
+                // вычисление пропорций
+                $ratio = $h_src/$h;
+                $w_dest = round($w_src/$ratio);
+                $h_dest = round($h_src/$ratio);
+            }else{
+                $w_dest = $w_src;
+                $h_dest = $h_src;
+            }
+			//echo $w_dest.'!='.$w_src.' && '.$h_dest.'!='.$h_src;
+            if($w_dest!=$w_src && $h_dest!=$h_src){
+                // Создание пустой картинки
+                $fimg = imagecreatefromstring($file_img);
+                // Преобразование размера
+                $dest = imagecreatetruecolor($w_dest,$h_dest);
+                imagecopyresampled($dest, $fimg, 0, 0, 0, 0, $w_dest, $h_dest, $w_src, $h_src);
+            //}else{
+            //    $dest = imagecreatefromstring($file_img);
+            }
+            //Вывод картинки
+
+            //header("Content-Disposition: inline; filename=\"$file\"");
+            //$file_size  = getimagesize($dest);
+            //header("Content-Length: $file_size");
+            Header("Content-type: $file_type; name=\"$file\"");
+            //header("Content-Transfer-Encoding: binary\n");
+           if(substr_count($file_type,"gif")) imagegif($dest);
+            elseif(substr_count($file_type,"jpeg")) imagejpeg($dest);
+            elseif(substr_count($file_type,"png")) imagepng($dest);
+            elseif(substr_count($file_type,"bmp")) imagewbmp ($dest);
+            imagedestroy($dest);
+        }
+    }
+?>

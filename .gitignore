@@ -1,0 +1,5 @@
+# Notepad++ backups #
+*.bak
+
+# web access password list
+.htpasswd

@@ -1,0 +1,91 @@
+<?php
+	if($_REQUEST["logout"]){
+		header("WWW-Authenticate: Basic realm=\"Site Clients Area\"");
+		header("HTTP/1.0 401 Unauthorized");
+		exit;
+	}
+	if(getenv("g_INC"))
+		include_once(getenv("g_INC")."conf.php");
+	else
+		include_once($_SERVER['DOCUMENT_ROOT']."/inc/conf.php");
+	include(PATH_INC."inc.php");
+	set_time_limit(120);
+// partner_site set coverphoto_name
+     $colname = $key = 'coverphoto';
+     $tbname = 'partner_site';
+	echo $sql = "SELECT id, ".$key."_name FROM $tbname WHERE  ".$key." is NULL";
+	$res =  db_getArray($conn, $sql,1);
+	if(!$res){
+		echo 'Нет записей </b><br/>';
+	}else{
+		//print_r($res);
+		foreach($res as $key=>$val){
+
+			$id=$val["ID"];// pictures_11973_84.jpg
+			//$filename = '/var/www/admin/htdocs/images/thumbnails/pictures_'.$val['AVATAR_NAME'].'_84.'.'jpg';//$val['IFILE_NAME'];
+			//$filename = '/var/www/admin/htdocs/images/pictures/'.$val['AVATAR_NAME'].'.'.'jpg';//$val['IFILE_NAME'];
+
+			//'/var/www/admin/htdocs/images/thumbnails/pictures_'.$val['ID'].'_300.'.$val['IFILE_NAME'];
+			//$filename = '/var/www/admin/htdocs/images/pictures/'.$val['ID'].'.'.$val['COVERPHOTO_NAME'];
+			//$filename = '/var/www/admin/htdocs/images/thumbnails/static_upload_pictures_'.$val['COVERPHOTO_NAME'].'_150.jpg';
+			$filename = '/var/www/admin/htdocs/images/pictures/'.$val['COVERPHOTO_NAME'].'.JPG';
+
+			if(is_readable($filename)){
+				$fp = $filename;
+				$exif = exif_read_data ($fp,0,true);
+				$ftype = $exif["FILE"]["MimeType"];
+				if(!$ftype || $ftype=="" ){
+					$is = @getimagesize($fp);
+					$ftype = $is['mime'];
+				}
+				$values = array();
+				$sql = "SELECT id FROM ti_file_types  WHERE name='{$ftype}'";
+				$ftres =  db_getArray($conn, $sql,2);
+				if(!$ftres){
+					echo 'Файл с типом '.$ftype.' не поддерживается (отображается) системой! <b>Файл удален с сервера! </b><br/>';
+				}else{
+					$size = getimagesize( $fp );
+					/*$values['column'][$key]='id';
+					$values['value'][$key]=$id;
+					$values['type'][$key]="id";   */
+					//файл
+					$values['column'][$key]=$colname;
+					$values['value'][$key]=$fp;//"lo_import('".$fp."')";
+					$values['type'][$key]="blob";
+					//размер
+					$values['column'][$key."_size"] = $colname."_size";
+					$values['value'][$key."_size"]=($exif['FILE']['FileSize']?$exif['FILE']['FileSize']:(filesize($fp)?filesize($fp):BASE_NULL));
+					$values['type'][$key."_size"]="int";
+					//высота
+					$values['column'][$key."_height"] = $colname."_height";
+					$values['value'][$key."_height"]=($exif['COMPUTED']['Height']?$exif['COMPUTED']['Height']:($size[1]?$size[1]:BASE_NULL));
+					$values['type'][$key."_height"]="int";
+					//ширина
+					$values['column'][$key."_width"] = $colname."_width";
+					$values['value'][$key."_width"]=($exif['COMPUTED']['Width']?$exif['COMPUTED']['Width']:($size[0]?$size[0]:BASE_NULL));
+					$values['type'][$key."_width"]="int";
+					//тип
+					$values['column'][$key."_type_id"] = $colname."_type_id";
+					$values['value'][$key."_type_id"]=$ftres['ID'];
+					$values['type'][$key."_type_id"]="int";
+					//Имя Файла
+					$values['column'][$key."_name"] = $colname."_name";
+					$values['value'][$key."_name"]=$filename;
+					$values['type'][$key."_name"]="varchar";
+					//echo 'values<pre>'; print_r($values);
+					$ins=db_update($conn, $tbname, $values['column'],$values['value'],$values['type'],"id=".$id);
+					if(ins){
+						echo 'Файл '.$filename.' сохранен под номером '.$ins." <br/>";
+					}else{
+						echo 'Файл '.$filename.' не удалось загрузить в базу '." <br/>";
+					}
+				}
+				echo $id." <br/>";
+				//unlink($fp);
+			} else{
+				echo 'Файл '.$filename.' не удалось загрузить в базу '." Он не доступен <br/>";
+			}
+		}
+	}
+	echo"</body></html>";
+?>

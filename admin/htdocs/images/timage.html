@@ -1,0 +1,10 @@
+<?
+if(getenv("g_INC"))
+	include_once(getenv("g_INC")."conf.php");
+else
+	include_once($_SERVER['DOCUMENT_ROOT']."/inc/conf.php");
+DEFINE("NO_SES", 1);
+include(PATH_INC."inc.php");
+include(PATH_INC."tools/timage.php");
+
+?>

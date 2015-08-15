@@ -1,0 +1,23 @@
+<?
+$start_time_global=mktime();
+include_once(getenv("g_INC")."conf.php");
+include_once(PATH_INC."main_inc.php");
+include_once(PATH_INC."func/func_layout_xml.php");
+//формируем страницу с помощью слоя
+$start_time_page=mktime();
+$error_text_rus="Ресурс, который вы запросили, не найден на сервере. Если вы уверены, что 
+набрали адрес правильно, обратитесь в службу технической поддержки: 
+<a href=\"mailto:ttfr@mail.ru\">ttfr@mail.ru</a>.<br/><br/> 
+Вы можете попытаться найти интересующую Вас информацию в одном из разделов 
+сайта или воспользоваться системой поиска информации по серверу.";
+$error_text_eng="Unfortunately, the URL you requested is not available on this server. If you 
+are sure that enter address properly, please call the technical support 
+division <a href=\"mailto:ttfr@mail.ru\">ttfr@mail.ru</a>.<br/><br/> 
+You may try to find the information you need in one of sections on site or use 
+its search system.";
+$xml="<ROOT>".$main_xml."<CLIENT_AREA><ERROR_TEXT_RUS>".htmlspecialchars($error_text_rus)."</ERROR_TEXT_RUS><ERROR_TEXT_ENG>".htmlspecialchars($error_text_eng)."</ERROR_TEXT_ENG></CLIENT_AREA></ROOT>";
+header("Content-type: text/html; charset=windows-1251");
+$layer_xsl['VFILE_NAME']="error404.xsl";
+$ret=xml_to_html($xml, $layer_xsl, $SERVER_NAME);
+echo $ret;
+?>

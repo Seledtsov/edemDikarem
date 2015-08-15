@@ -1,0 +1,216 @@
+<?
+//var_dump($_POST);
+//define("ITEMS_ON_PAGE", 10);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+//echo ITEMS_ON_PAGE;
+if ($our_arm_id)
+   {
+   $entity_structure = get_entity_structure($conn, $our_arm_id);
+
+   $SubArms=SubArms_nav($conn, $over_id, $over_arm_id, $entity_structure, $our_arm_id);
+
+   $showsel = get_entity_relation($conn, $entity_structure);
+	if($our_ent_id || $new)
+			$show_form=1;
+   $entity_info_ar=array("complex"=>$complex, "entity_structure"=>$entity_structure, "our_ent_id"=>$our_ent_id, "sort_by"=>$sort_by, "new"=>$new, "show_form"=>$show_form, "arm_type"=>"tree");
+   $entity_info=get_for_list($conn, $entity_info_ar);
+   //echo "<pre>";
+   //print_r($entity_info);
+
+   if(count($entity_info['filter_ar']))
+      {
+      if($our_ent_id || $new)//редактирование конкретной записи
+         {
+         $show_filter_ret=show_filter($conn, array("filter_ar"=>$entity_info['filter_ar'], "form_ar"=>$entity_info['form_ar'], "our_arm_id"=>$our_arm_id));
+         }
+      else
+       {
+       $show_filter_ret=show_filter($conn, array("filter_ar"=>$entity_info['filter_ar'], "list_ar"=>$entity_info['list_ar'], "our_arm_id"=>$our_arm_id, "lookup"=>$lookup, "lookup_name"=>$lookup_name, 'arm_type'=>"tree"));
+       }
+           //echo "<br>ARM=".$our_arm_id." ent_id=0 table=".$entity_info['list_ar'][0]['TABLE_ID']." name=".SEARCH."<br><br>";
+           full_log($conn, $our_arm_id, 0, SEARCH, $entity_info['list_ar'][0]['TABLE_ID']);
+      }
+
+   if ($new_list_entity )
+      {
+      $new_list_entity_ar=array("info_ar"=>$entity_info);
+      $res=new_list_entity($conn, $new_list_entity_ar);
+      }
+   elseif ($update_list_entity)
+          {
+          $update_list_entity_ar=array("info_ar"=>$entity_info, "mark"=>$mark, "AlterIt"=>$AlterIt);
+          $res=update_list_entity($conn, $update_list_entity_ar);
+          }
+   elseif ($delete_list_entity)
+          {
+          $delete_list_entity_ar=array("info_ar"=>$entity_info, "mark"=>$mark, "AlterIt"=>$AlterIt);
+          $res=delete_list_entity($conn, $delete_list_entity_ar);
+          }
+   elseif($save_form)//сохранить из формы
+          {
+          $save_form_ar=array("info_ar"=>$entity_info, "our_arm_id"=>$our_arm_id, "our_ent_id"=>$our_ent_id);
+          $res=save_form($conn, $save_form_ar);
+          }
+   if($res['yes'])
+             {
+             $href=g_URL."?ans=1".addit_string_form(array("addit_string_ar"=>$addit_string_ar, "ret_format"=>"string"));
+             header("Location:$href");
+             href($href, $href);
+             }
+
+   if($our_ent_id || $new)//редактирование конкретной записи
+      {
+      //$show_filter_ret=show_filter($conn, array("filter_ar"=>$entity_info['filter_ar'], "form_ar"=>$entity_info['form_ar'], "our_arm_id"=>$our_arm_id));
+      $show_form_ar=array("entity_info"=>$entity_info, "our_arm_id"=>$our_arm_id, "our_ent_id"=>$our_ent_id, "sel_q"=>$entity_info['sel_q']);
+      $show_form_ar['addit_string']=$addit_string;
+      $show_form_ar['addit_string_ar']=$addit_string_ar;
+      if(is_array($res['error']))
+         $show_form_ar['error_form']=$res['error'];
+      else
+          {
+          $show_form_ar['error_form']=$res['error'];
+          }
+      if($new)
+         $show_form_ar['new']=$new;
+      //echo"sel_q=".$entity_info['sel_q']."<br>";
+      $form=show_form($conn, $show_form_ar);
+      }//конец редактирования конкретной записи
+   else
+       {
+       //echo sub_arms_path($SubArms);
+       //$addit_string.="&our_arm_id=$our_arm_id";
+
+       if(!$print)
+           {
+           if($search && !$sort_by_search && $sort_by)
+              $sort_by_search=$sort_by;
+           //$show_filter_ret=show_filter($conn, array("filter_ar"=>$entity_info['filter_ar'], "list_ar"=>$entity_info['list_ar'], "our_arm_id"=>$our_arm_id));
+           if($search && $show_filter_ret['whereSQL'])
+              $entity_info['whereSQL'].=($entity_info['whereSQL']?" and ":"").$show_filter_ret['whereSQL'];
+           }
+       //show_entity_list($conn, $arm_id, $g_url, $search, $sort_by, $sort_by_search, $page, $entity_structure, $showsel, 0, $sub_arm);
+       //echo"whereSQL=".$entity_info['whereSQL']."<br>";
+       if($entity_info['whereSQL'])
+          {
+          $entity_info['sel_q'].=" where ".$entity_info['whereSQL'];
+          $entity_info['sel_count_q'].=" where ".$entity_info['whereSQL'];
+          }
+       if($entity_info['where'])
+          {
+          $entity_info['sel_q'].=($entity_info['whereSQL']?" and ":" where ").$entity_info['where'];
+          $entity_info['sel_count_q'].=($entity_info['whereSQL']?" and ":" where ").$entity_info['where'];
+          }
+       if($SubArms['WHERE'])
+          {
+          $entity_info['sel_q'].=(($entity_info['whereSQL'] || $entity_info['where'])?" and ":" where ").$SubArms['WHERE'];
+          $entity_info['sel_count_q'].=(($entity_info['whereSQL'] || $entity_info['where'])?" and ":" where ").$SubArms['WHERE'];
+          }
+       if($entity_info['orderSQL'])
+          {
+          $entity_info['sel_q'].=" order by ".$entity_info['orderSQL'];
+          }
+
+       //echo("<br>sel_q=".$entity_info['sel_q']."<br><br> sel_count=".$entity_info['sel_count_q']."<br>");
+       //exit();
+
+       //echo"num_items=".$entity_structure[0]['NUM_ITEMS']."<br>";
+       $show_list_ar=array("entity_info"=>$entity_info, "our_arm_id"=>$our_arm_id, "sel_q"=>$entity_info['sel_q'], "sel_count_q"=>$entity_info['sel_count_q'], "max_on_page"=>$entity_structure[0]['NUM_ITEMS'], "page"=>$page, "lookup"=>$lookup, "lookup_name"=>$lookup_name, 'arm_type'=>"tree");
+
+       if($res['error'])
+          {
+          $show_list_ar['error_form']=$res['error'];
+          //echo"ERR";
+          }
+       if($delete_list_entity && $res['error'])//если было удаление - для того, чтобы показать ссылающиеся записи
+          {
+          $info_ref=info_ref($conn, $entity_info['table_id']);
+          if(count($SEL_SVIZ[$entity_info['table_id']]))//если есть ссылающиеся записи
+             {
+             $show_list_ar['delete_list_entity']=1;
+             }
+          }
+       $show_list_ar['addit_string']=$addit_string;
+       $form=show_list($conn, $show_list_ar);
+       }//конец списка
+
+//начало вывода
+  //if(!$lookup)
+      adm_navigation($conn, $our_arm_id, $lookup, $print);
+   //$SubArms=SubArms_nav($conn, $over_id, $over_arm_id, $entity_structure);
+
+   div('class="PortletTitle" align="center"');
+   echo $entity_structure[0]['ARM_NAME'];
+   divend();
+   echo sub_arms_path($SubArms);
+   if(!$print)
+	echo $show_filter_ret['html'];
+   if(!$our_ent_id)
+       br();
+   if($ans)
+      {
+       div('style="color:008820"');
+       echo"Изменения были внесены в базу<br>";
+       divend();
+      }
+   elseif((is_array($res['error']) && ($save_form))
+           || (is_array($res['error']['new']) && $new_list_entity)
+           || (is_array($res['error']) && $update_list_entity && !(is_array($res['error_save'])) )
+           )
+          {
+          div('class="err"');
+          if(($new || $our_ent_id))
+             {
+             echo"Неправильно заполнены поля:<br>";
+             foreach($res['error'] as $k=>$v)
+                  {
+                  //echo"$k=$v<br>";
+                  nbsp(2);
+                     echo $entity_info['form_ar'][$k]['COL_ABOUT']."<br>";
+                  }
+             }
+          else
+              {
+              echo"Неправильно заполнена форма<br>";
+              }
+          divend();
+          }
+   elseif($res && !$res['yes'])
+          {
+          div('class="err"');
+          echo"Ошибка при сохранении данных<br>";
+          foreach($ERROR as $k_err=>$v_err)
+                  {
+                  echo "$v_err<br>";
+                  }
+          divend();
+
+          $res['error']=1;
+          }
+   if(!$our_ent_id)
+       br();
+   if(($our_ent_id || $new) && !$print_form)
+      {
+	  table('width="100" cellpadding="1"');
+	  trtd();
+      forminput("button", "", "Вернуться к списку", 'button', 'onclick="location.reload(\''.g_URL.addit_string_form(array("addit_string_ar"=>$addit_string_ar, "ret_format"=>"string", "first"=>"?")).'\')"');
+	  if($our_ent_id)
+		{
+		tdtd();
+		forminput("button", "", "Распечатать", 'button', 'onclick="window.open(\''.href_prep(g_URL."?".g_QUERY, "print=1&print_form=1").'\')"');
+		}
+		tdtr();
+	  tableend();
+      br();
+      }
+   echo $form;
+   //if(!$lookup)
+   adm_navigation_end();
+   }
+else
+{
+    table("width='100%' class='adm_navig_arm'");
+         show_admin_menu($conn, 18,0);
+    tableend();
+}
+?>

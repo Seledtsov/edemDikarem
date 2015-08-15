@@ -1,0 +1,146 @@
+<?
+define("ITEMS_ON_PAGE", 10);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+include_once(PATH_INC."func/admin.php");
+
+$id=$over_id[count($over_id)];
+if($save && $id)
+   {
+   $del_q="delete from ".TABLE_PRE."search_rating where entity_id=$id";
+   $del=db_query($conn, $del_q);
+   if($del)
+      {
+      foreach($rating as $k=>$v)
+           {
+           //echo"$k=$v<br>";
+           if($v)
+              $ins=db_insert($conn, TABLE_PRE."search_rating", array("ENTITY_ID", "COLUMN_ID", "RATING", "SECTION_LEVEL"),
+                                                               array($id, $k, $v, 0),
+                                                               array("int", "int", "int", "int" ));
+           }
+      }
+	  db_commit($conn);
+   }
+//$sel_tab_q="select t.table_id, t.NAME, t.about, t.main from ".TABLE_PRE."tables t, ".TABLE_PRE."objects_tables ot where ot.table_id=t.table_id and ot.entity_id=$id";
+//$res_tab=db_getArray($conn, $sel_tab_q);
+$res_tab=object_info($conn, $over_id[1]);
+$i=0;
+adm_navigation($conn, $our_arm_id, $sub_arm);
+            div('class="PortletTitle" align="center"');
+                  echo $entity_structure[0]['ARM_NAME'];
+            divend();
+//echo"<pre>";
+//print_r($res_tab);
+form(g_URL);
+table('cellpadding="3"  class="ListForm"');
+foreach($res_tab as $k=>$v)
+        {
+        //echo"$k=$v<br>";
+
+        $res_col=$res_tab['COLS'][$v['TABLE_ID']];
+
+        if($v['MAIN'])
+           {
+           trtd('', 'class="HeaderCell" colspan="2"');
+           echo $v['ABOUT'];
+           tdtr();
+           foreach($res_col as $k1=>$v1)
+                  {
+                   $sel_rating_q="select rating from ".TABLE_PRE."search_rating where entity_id=$id and column_id=".$v1['COLUMN_ID'];
+                       //echo"sel_rating_q=$sel_rating_q<br>";
+                   $res_rating=db_getArray($conn, $sel_rating_q, 2);
+                   if ($k1%2 == 0)
+                       $trclass = "dark";
+                   else
+                       $trclass = "light";
+                   trtd('class="'.$trclass.'"');
+                       echo $v1['ABOUT'];
+                       tdtd();
+                       forminput("text", "rating[".$v1['COLUMN_ID']."]", $res_rating['RATING'], '', 'size="4" maxlength="6"');
+                       tdtr();
+                       $i++;
+                   }
+
+           }
+        elseif($v['ABOUT'])
+            {
+            //forminput("checkbox", "column_ar[$i]", "");
+            trtd('', 'class="HeaderCell"');
+            echo $v['ABOUT'];
+            tdtd('class="HeaderCell"');
+           foreach($res_col as $k1=>$v1)
+                  {
+
+					//echo"$k1=<pre>";
+					//print_r($v1);
+					//br();
+
+				if($v1['REF_COLUMN_ID']==NAV_ID && DEFINED("NAV_INDEX")) 
+					{
+					$sel_rating_q="select rating from ".TABLE_PRE."search_rating where entity_id=$id and column_id=".$v1['COLUMN_ID'];
+					$res_rating=db_getArray($conn, $sel_rating_q, 2);
+					forminput("checkbox", "rating[".$v1['COLUMN_ID']."]", 1, "", ($res_rating['RATING']?"checked":""));
+					}
+				}
+			//echo"NAV_ID=".NAV_ID;
+            tdtr();
+            $i++;
+            }
+        }
+           trtd('', 'colspan="3"');
+           echo addit_string_form(array("addit_string_ar"=>$addit_string_ar, "ret_format"=>"form_hidden" ));
+           forminput("hidden", "save", 1);
+           forminput("submit", "", "Сохранить");
+           tdtr();
+           tableend();
+           formend();
+
+/*
+foreach($res_tab as $k=>$v)
+        {
+
+        //echo"$k=$v<br>";
+        $res_col=$res_tab['COLS'][$v['TABLE_ID']];
+        if($v['MAIN'])
+           {
+           echo $v['ABOUT'];
+           form(g_URL);
+           echo addit_string_form(array("ret_format"=>"form_hidden", "addit_string_ar"=>$addit_string_ar));
+           table('cellpadding="2" border = "0" class="ListForm"');
+           foreach($res_col as $k1=>$v1)
+                   {
+                   $sel_rating_q="select rating from ".TABLE_PRE."search_rating where entity_id=".$over_id[1]." and column_id=".$v1['COLUMN_ID'];
+                       //echo"sel_rating_q=$sel_rating_q<br>";
+                   $res_rating=db_getArray($conn, $sel_rating_q, 2);
+                   if ($k1%2 == 0)
+                       $trclass = "dark";
+                   else
+                       $trclass = "light";
+                   trtd('class="'.$trclass.'"');
+                       echo $v1['ABOUT'];
+                       tdtd();
+                       forminput("text", "rating[".$v1['COLUMN_ID']."]", $res_rating['RATING'], '', 'size="4" maxlength="6"');
+                       tdtr();
+                       $i++;
+                   }
+           trtd('', 'colspan="3"');
+           forminput("hidden", "save", 1);
+           forminput("hidden", "id", $id);
+           forminput("submit", "", "Сохранить");
+
+           tdtr();
+           tableend();
+           formend();
+           }
+        elseif($v['ABOUT'])
+            {
+            //forminput("checkbox", "column_ar[$i]", "");
+            echo $v['ABOUT'];
+            br();
+            $i++;
+            }
+        }
+*/
+adm_navigation_end();
+?>

@@ -1,0 +1,38 @@
+<?
+//var_dump($_POST);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+jscript('js/func_form.js', ''); 
+if ($arm_id)
+{
+  $entity_structure = get_entity_structure($conn, $arm_id);
+  $showsel = get_entity_relation($conn, $entity_structure);
+  if ($update_entity)
+  {
+          $result = update_entity($conn, $arm_id, $entity_structure, $mark, $entity_id);
+  }
+  elseif ($delete_entity)
+  {
+          delete_entity($conn, $mark, $entity_structure);
+  }
+  //if ($sub_arm == "")
+  sub_arms_path($sub_arms);//путь от подармов
+
+        adm_navigation($conn, $arm_id, $sub_arm, $print);
+            div('class="PortletTitle" align="center"');
+                  echo $entity_structure[0]['ARM_NAME'];
+            divend();
+
+  if($search && !$sort_by_search && $sort_by)
+     $sort_by_search=$sort_by;
+  if(!$print)
+      show_filter($conn, $arm_id, $g_url, $sort_by_search, $entity_structure, $showsel);
+  show_entity_list($conn, $arm_id, $g_url, $search, $sort_by, $sort_by_search, $page, $entity_structure, $showsel, 1, $sub_arm);
+  //if ($sub_arm == "")
+          adm_navigation_end();
+}
+else
+{
+ show_all_entity();
+}
+?>

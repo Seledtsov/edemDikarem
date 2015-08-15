@@ -1,0 +1,10 @@
+<?
+include_once(getenv("g_INC")."conf.php");
+include_once(PATH_INC."main_inc.php");
+$id=intval($id);
+$sel_link="SELECT href FROM banners WHERE id=$id";
+$res_link=db_getArray($conn, $sel_link, 2);
+if(!eregi("^/", $res_link['HREF']) && !eregi("^http://", $res_link['HREF']))// если не относительный путь
+	$res_link['HREF']="http://".$res_link['HREF'];
+header("Location:".$res_link['HREF']);
+?>

@@ -1,0 +1,315 @@
+<?php
+	if($_REQUEST["logout"]){
+		header("WWW-Authenticate: Basic realm=\"Site Clients Area\"");
+		header("HTTP/1.0 401 Unauthorized");
+		exit;
+	}
+	if(getenv("g_INC"))
+		include_once(getenv("g_INC")."conf.php");
+	else
+		include_once($_SERVER['DOCUMENT_ROOT']."/inc/conf.php");
+	include(PATH_INC."inc.php");
+	set_time_limit(120);
+	$form_html = '<form  name="zip" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="MAX_FILE_SIZE" value="'.str_ireplace(array('k','m'),array('000','000000'),ini_get(upload_max_filesize)).'"><input type="file" name="file" value=""><input type="submit" name="submit" value="Загрузить"></form>';
+	//Если задан арм в который грузим
+	if ($our_arm_id)
+	{
+		adm_navigation($conn, $our_arm_id, $lookup, $print);
+		div('class="PortletTitle" align="center"');
+		echo('Пакетная загрузка начата');
+		divend();
+		if($_FILES["file"]){
+		//echo "_FILES<pre>"; print_r($_FILES);
+			//проверяем наличие ошибок при загрузке
+			if ($_FILES["file"]["error"] > 0)
+			{
+				$error_message=array(
+				"0"=>"Ошибок не возникло, файл был успешно загружен на сервер.",
+				"1"=>"Размер принятого файла превысил максимально допустимый размер.",
+				// который задан директивой upload_max_filesize конфигурационного файла php.ini.",
+				"2"=>"Размер загружаемого файла превысил значение {$_POST['MAX_FILE_SIZE']}.",
+				"3"=>"Загружаемый файл был получен только частично.",
+				"4"=>"Файл не был загружен.",
+				"6"=>"Отсутствует временная папка",
+				"7"=>"Не удалось записать файл на диск.",
+				"8"=>"Не допустимое расширение"//"PHP-расширение остановило загрузку файла."
+				);
+				echo "Error: " . $error_message[$_FILES["file"]["error"]] . "<br />";
+				echo $form_html;
+			}else{
+				$column_name ='mfile';
+				// Если файл загружен без ошибок
+				$entity_structure = get_entity_structure($conn, $our_arm_id);
+				//echo '$entity_structure<pre>'; var_dump($entity_structure);
+				foreach($entity_structure as $val){
+					if($val['ARM_COLUMN_ID'] && $val['ADD_ROW'] && $val['MAIN']){
+						if($val['COL_TYPE']=='file' || $val['COL_TYPE']=='blob'){
+							$column_name =$val['COL_NAME'];
+						}
+
+						$field[$val['COL_NAME']] = array(
+						"COL_NAME"=>$val['COL_NAME'],
+						"ARM_COLUMN_ID"=>$val['ARM_COLUMN_ID'],
+						"NULL_VALUE"=>$val['NULL_VALUE'],
+						"DEFAULT_VALUE"=>$val['DEFAULT_VALUE'],
+						"COLUMN_TYPE_ID"=>$val['COLUMN_TYPE_ID'],
+						"COL_TYPE"=>$val['COL_TYPE'],
+						"REF_COLUMN_ID"=>$val['REF_COLUMN_ID'],
+						"COLUMN_LENGTH"=>$val['COLUMN_LENGTH'],
+						"TABLE_NAME"=>$val["TABLE_NAME"]
+						);
+					}
+				}
+				$patch = $_FILES["file"]["tmp_name"];
+				if (is_uploaded_file($patch)) {
+					if(is_readable($patch)){
+						$rash = substr($_FILES["file"]["name"],strrpos ($_FILES["file"]["name"],'.')+1);
+						if((substr_count($_FILES["file"]["type"],'zip')>0 || substr_count($_FILES["file"]["type"],'stream')>0)&& substr_count($rash,'zip')>0){
+							//echo '<pre>'; var_dump($_FILES);
+							echo 'Это архив ZIP, начинаем распаковку: <br/>';
+							$zip = zip_open($patch);
+							if ($zip){
+							$sort_order = 0;
+								while ($zip_entry = zip_read($zip)) { $sort_order++;
+									if (zip_entry_open($zip, $zip_entry, "r")) {
+										$fn = zip_entry_name($zip_entry);//Извлекаем имя
+										$fn = iconv("CP866", "CP1251", $fn);//Раскодируем его
+										$path_parts = explode("/",$fn);// Получаем исходное  Имя файла
+										$filename = end($path_parts);
+
+										if($filename!=""){
+											$fn = $filename;
+											//Фильтруем и заменяем недопустимые символы
+											if ( ! eregi("[^A-Za-zА-Яа-я0-9///./-/_'`_]",$fn)){
+												//echo "нет посторонних букв (OK)";
+											}else{
+												//echo "есть посторонние буквы (FALSE)";
+												$fn = eregi_replace("\s","_" ,$fn);
+												$fn = eregi_replace("[^A-Za-zА-Яа-я0-9///./-/_'`]","X" ,$fn);
+											}
+											//Транслит кирилицы
+											if(ereg("[А-Яа-я]+",$fn)){
+												$fn = my_translit($fn);
+											}
+											//Формируем временный путь к файлу
+											//$fp =IMAGE_PATH.IMAGE_ORIGINAL.'phptf'.time();
+											$fp =IMAGE_PATH.IMAGE_ORIGINAL.str_replace(".",'_'.time().".",$fn);
+												//Записываем файл на сервер
+												$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+												$wr = file_put_contents( $fp , $buf,LOCK_EX);
+												if($wr===false){
+													echo 'Не удалось сохранить файл: '.$filename.' как '.$fp." <br/>";
+												}else{
+													//echo 'Файл : '.$filename.' сохранен как '.$fp." <br/>";
+													$exif = exif_read_data ($fp,0,true);
+													//echo "exif<pre>"; print_r($exif);
+													$ftype = $exif["FILE"]["MimeType"];
+													if(!$ftype || $ftype=="" ){
+														$is = @getimagesize($fp);
+														$ftype = $is['mime'];
+													}
+													$sql = "SELECT id FROM ti_file_types  WHERE name='{$ftype}'";
+													$ftres =  db_getArray($conn, $sql,2);
+													if(!$ftres){
+														echo 'Файл с типом '.$ftype.' не поддерживается (отображается) системой! <b>Файл удален с сервера! </b><br/>';
+													}else{
+														$values = array();
+														foreach($field as $key=>$val){
+															if($val['COL_NAME']=='id'){
+																$TABLE_NAME2 = $val["TABLE_NAME"];
+															}elseif($val['COL_NAME']=='name' || $val['COL_NAME']=='alter_name'
+															|| $val['COL_NAME']=='name_ru' || $val['COL_NAME']=='name_en'){
+																$values['column'][$key] = $val['COL_NAME'];
+																$values['type'][$key] = $val['COL_TYPE'];
+																$values['value'][$key] = $exif['WINXP']['Title'];
+																if($values['value'][$key]==''){
+																$values['value']["$key"] = substr($filename,0,stripos ($filename,'.'));
+																}
+															}elseif($val['COL_NAME']==$column_name){
+																$size = getimagesize( $fp );
+																//файл
+																$values['column'][$key]=$val['COL_NAME'];
+																$values['value'][$key]=$fp;//"lo_import('".$fp."')";
+																$values['type'][$key]="blob";
+																//размер
+																$values['column'][$key."_size"] = $val['COL_NAME']."_size";
+																$values['value'][$key."_size"]=($exif['FILE']['FileSize']?$exif['FILE']['FileSize']:(filesize($fp)?filesize($fp):BASE_NULL));
+																$values['type'][$key."_size"]="int";
+																//высота
+																$values['column'][$key."_height"] = $val['COL_NAME']."_height";
+																$values['value'][$key."_height"]=($exif['COMPUTED']['Height']?$exif['COMPUTED']['Height']:($size[1]?$size[1]:BASE_NULL));
+																$values['type'][$key."_height"]="int";
+																//ширина
+																$values['column'][$key."_width"] = $val['COL_NAME']."_width";
+																$values['value'][$key."_width"]=($exif['COMPUTED']['Width']?$exif['COMPUTED']['Width']:($size[0]?$size[0]:BASE_NULL));
+																$values['type'][$key."_width"]="int";
+																//тип
+																$values['column'][$key."_type_id"] = $val['COL_NAME']."_type_id";
+																$values['value'][$key."_type_id"]=$ftres['ID'];
+																$values['type'][$key."_type_id"]="int";
+																//Имя Файла
+																$values['column'][$key."_name"] = $val['COL_NAME']."_name";
+																$values['value'][$key."_name"]=$filename;
+																$values['type'][$key."_name"]="varchar";
+																unset($buf);
+															}elseif($val['COL_NAME']=='description' || $val['COL_NAME']=='description_ru' || $val['COL_NAME']=='description_en'){
+																$values['column']["$key"] = $val['COL_NAME'];
+																$values['type']["$key"] = $val['COL_TYPE'];
+																$values['value']["$key"] = $exif['WINXP']['Comments'];
+															}elseif($val['COL_NAME']=='keyword' || $val['COL_NAME']=='keyword_ru' || $val['COL_NAME']=='keyword_en'){
+																$values['column']["$key"] = $val['COL_NAME'];
+																$values['type']["$key"] = $val['COL_TYPE'];
+																$values['value']["$key"] = $exif['WINXP']['Keywords'];
+															}elseif($val['COL_NAME']=='author_id'){
+																if(intval($exif['IFD0']['Artist'])>0){
+																$values['column']["$key"] = $val['COL_NAME'];
+																$values['type']["$key"] = $val['COL_TYPE'];
+																$values['value']["$key"] = $exif['IFD0']['Artist'];
+																}
+															}elseif($val['COL_NAME']=='sort_order'){
+																$values['column']["$key"] = $val['COL_NAME'];
+																$values['type']["$key"] = $val['COL_TYPE'];
+																$values['value']["$key"] = $sort_order;
+															}elseif($val['COL_NAME']=='mrubrikator_id' && strlen(trim($exif['WINXP']['Subject']))>0){
+																$sel_mr = "select id from mrubrikator where (name='{$exif['WINXP']['Subject']}' or name_en='{$exif['WINXP']['Subject']}')";
+																if(intval($exif['IFD0']['Artist'])>0)
+																  $sel_mr .= " and author_id=".intval($exif['IFD0']['Artist']);
+																else  $sel_mr .= " and author_id is null";
+																$res = db_getArray($conn, $sel_mr,2);
+																//var_dump($res);
+																$values['column']["$key"] = $val['COL_NAME'];
+																$values['type']["$key"] = $val['COL_TYPE'];
+																if(!isset($res["ID"])){
+																	$entity_structure2 = get_entity_structure($conn, 157);
+																	$field2 = array();
+																	$field2['column']['id'] = 'id';
+																	$field2['value']['id'] = '';
+																	$field2['type']['id'] = 'ID';
+																	$TABLE_NAME ="";
+																	foreach($entity_structure2 as $val){
+																		if($val['COL_NAME']&& $val['COL_NAME']!="id"){
+																			if(substr_count($val['COL_NAME'],"name")>0 ){
+																				$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																				$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																				$field2['value'][$val['COL_NAME']] = bad_editor(htmlspecialchars($exif['WINXP']['Subject'],ENT_QUOTES | ENT_IGNORE,'cp1251'),$val['COLUMN_LENGTH']);
+																			}elseif($val['COL_NAME']=='author_id'){
+																					if(intval($exif['IFD0']['Artist'])>0){
+																						$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																						$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																						echo $field2['value'][$val['COL_NAME']]  = intval($exif['IFD0']['Artist']);
+																					}
+																			}elseif($val['COL_NAME']=='publish_state_id'){
+																				$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																				$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																				$field2['value'][$val['COL_NAME']]  = 1;
+																			}elseif($val['NULL_VALUE']!=1){
+																				if($val['COL_TYPE']=='date'){
+																					$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																					$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																					$field2['value'][$val['COL_NAME']] = "now()";
+																				}elseif($val['COL_TYPE']=='int' &&  $val['DEFAULT_VALUE']){
+																					$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																					$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																					$field2['value'][$val['COL_NAME']]  = intval($val['DEFAULT_VALUE']);
+																				}else{
+																					$field2['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																					$field2['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																					$field2['value'][$val['COL_NAME']]  = $val['DEFAULT_VALUE'];
+																				}
+																			}
+																		}elseif($val["TABLE_NAME"]){
+																			$TABLE_NAME = $val["TABLE_NAME"];
+																		}
+																	}
+																	 $ins=db_insert($conn, $TABLE_NAME, $field2['column'],$field2['value'],$field2['type']);
+																	if(ins){
+																		echo 'Фотоистория '.$exif['WINXP']['Subject'].' сохранена под номером '.$ins." <br/>";
+																		$values['value']["$key"] = $ins;
+																	}else{
+																		echo 'Фотоисторию '.$exif['WINXP']['Subject'].' не удалось сохранить в базу '." <br/>";
+																		$values['value']["$key"] = 'NULL';
+																	}
+																}else{
+																	$values['value']["$key"] = $res["ID"];
+																}
+															}elseif($val['COL_NAME']=='date' || $val['COL_NAME']=='date_main'){
+																	$values['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																	$values['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																	if($exif['EXIF']['DateTimeOriginal']){
+																	$dar=(date_format_ar($exif['EXIF']['DateTimeOriginal'],"Y:m:d H:i:s",DATE_FORMAT ));
+																		$values['value'][$val['COL_NAME']] = $dar;
+																	}else{
+																		$values['value'][$val['COL_NAME']] = "now()";
+																	}
+																	//"timestamp '{$exif['EXIF']['DateTimeOriginal']}'";
+																	//"now()";
+																	//db_date($exif['EXIF']['DateTimeOriginal']);
+																	//db_date($exif['FILE']['FileDateTime']);
+															}else{
+																if($val['COL_TYPE']=='date'){
+																	$values['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																	$values['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																	$values['value'][$val['COL_NAME']] = "now()";
+																}elseif($val['COL_NAME']=='publish_state_id'){
+																	$values['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																	$values['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																	$values['value'][$val['COL_NAME']]  = 1;
+																}elseif($val['COL_TYPE']=='int' &&  $val['DEFAULT_VALUE']){
+																	$values['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																	$values['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																	$values['value'][$val['COL_NAME']]  = intval($val['DEFAULT_VALUE']);
+																}elseif($val['NULL_VALUE']==0){
+																	$values['column'][$val['COL_NAME']] = $val['COL_NAME'];
+																	$values['type'][$val['COL_NAME']] = $val['COL_TYPE'];
+																	$values['value'][$val['COL_NAME']]  = $val['DEFAULT_VALUE'];
+																}
+															}
+														}
+														//echo 'values<pre>'; print_r($values);
+														$ins=db_insert($conn, $TABLE_NAME2, $values['column'],$values['value'],$values['type']);
+														if(ins){
+															echo 'Файл '.$filename.' сохранен под номером '.$ins." <br/>";
+														}else{
+															echo 'Файл '.$filename.' не удалось загрузить в базу '." <br/>";
+														}
+													}
+													unlink($fp);
+												}
+											zip_entry_close($zip_entry);
+											echo "<br>\n";
+										}
+									}
+								}
+								zip_close($zip);
+							}else{
+								echo 'Это не ZIP архив, это '.$_FILES["file"]["type"];
+							}
+						}else{
+							echo 'Это не ZIP архив, это '.$_FILES["file"]["type"];
+						}
+					}else{
+						echo "Файл недоступен для чтения!<br/>";
+					}
+				}else{
+					echo "Возможная атака с участием загрузки файла: ";
+					echo "файл '". $patch . "'.<br/>";
+				}
+
+				echo $form_html;
+
+			}
+
+		}else{
+			echo $form_html;
+		}
+		adm_navigation_end();
+	}
+	else
+	{	//Если не авторизован
+		table("width='100%' class='adm_navig_arm'");
+		show_admin_menu($conn, 18,0);
+		tableend();
+	}
+	echo"</body></html>";
+?>

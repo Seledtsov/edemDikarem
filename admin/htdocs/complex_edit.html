@@ -1,0 +1,170 @@
+<?
+// Форма редактирования сложной сущности
+//var_dump($_POST);
+//echo '<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">';
+//define("ITEMS_ON_PAGE", 3);
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+jscript('js/func_form.js', '');
+jscript('js/editor.js', '');
+$ret_string=ereg_replace("entity_id=$entity_id&", "", g_QUERY);
+if ($arm_id)
+{
+        $ti_arm_id = $arm_id;
+        //echo"be 1";
+        //echo"be 2";
+        $entity_structure = get_entity_structure($conn, $ti_arm_id);
+        //echo"be 3";
+        $showsel = get_entity_relation($conn, $entity_structure);
+        //echo"be 4";
+        //exit;
+        //echo"entity_id=$entity_id<BR>";
+        if ($new == 1)
+        {
+                $entity_id = db_next_seq($conn, $entity_structure[0]['TABLE_NAME']."_id_seq");
+                //echo $entity_id;
+        }
+        //echo"2 entity_id=$entity_id<BR>";
+        //echo "entity_id $entity_id";
+        if ($entity_id)
+        {
+                //echo"update_entity=$update_entity<br>";
+                if ($update_entity)
+                {
+
+                        $ans = update_entity($conn, $ti_arm_id, $entity_structure, $mark, $entity_id, 1);
+                        //echo"ans=$ans<br>";
+                        if ($ans == 1)
+                        {
+                        echo "<script>document.location.href='complex_entity.html?".($ret_string?$ret_string:"arm_id=$ti_arm_id&sub_arm=$sub_arm")."'</script>";
+                        }
+                }
+                else
+                $ans = 1;
+        }
+        adm_navigation($conn, $ti_arm_id, $sub_arm);
+        $SubArms=SubArms_nav($conn, $over_id, $over_arm_id, $entity_structure);
+        if($entity_structure[0]['VIEW_SUB_TYPE'] & 2)
+           {
+                    $subarms=get_SubArms($conn, $arm_id);
+                    foreach($subarms as $k=>$v)
+                            {
+                            $over_string=prep_over_string($entity_id, $arm_id);
+                            //prep_over_string($over_id, $over_arm_id, $over_obj, $id, $arm_id)
+                            $href_sub=href_prep($v['FILE_NAME'], "arm_id=".$v['ID']."&$over_string");
+                            href($href_sub, $v['NAME']);
+                            }
+           }
+
+        form($g_url."?".$ret_string, "POST", "enctype='multipart/form-data' onsubmit=\"return check_passwords('".$g_url."','password1', 'password2')\" name=\"complex_edit_form\"");
+        table('border="0" bordercolor="#ff0000" align="center" width="100%"');
+        trtd('','colspan="2" align="center"');
+        div('class="PortletTitle"');
+        echo $entity_structure[0]['ARM_NAME'];
+        divend();
+        //echo "Sub arm = $sub_arm";
+        tdtr();
+        forminput("hidden", "sub_arm", $sub_arm);
+        trtd('', 'width="30%"');
+        tdtd( 'width="70%"');
+        tdtr();
+        trtd('','align="left" colspan="2"');
+        $list_arm_name_sql = "select file_name from ".TABLE_PRE."arms where id=$ti_arm_id";
+        $list_arm_name = db_getArray($conn, $list_arm_name_sql, 2);
+        forminput("button", "", "<<< Вернуться в список", "", "onclick = 'location.href=\"http://".$GLOBALS['HTTP_HOST']."/".$list_arm_name['FILE_NAME']."?".($ret_string?$ret_string:"arm_id=$ti_arm_id&sub_arm=$sub_arm")."\"'");
+        br(3);
+        tdtr;
+        if($err_form_mes)
+           {
+           trtd('', 'colspan="2" class="error_msg"');
+           echo $err_form_mes;
+           tdtr();
+           }
+        for ($i = 0; $i<count($entity_structure) ;$i++)
+        {
+                if($column_list)
+                $column_list.=", ";
+                $column_list.=$entity_structure[$i]['COL_NAME'];
+                if ($entity_structure[$i]['MAIN'] == 1)
+                $table_name=$entity_structure[$i]['TABLE_NAME'];
+        }
+        $entity_value_sql = "select ".$column_list.", '$table_name' as table_name from ".$table_name." where id = $entity_id";
+        //echo"entity_value_sql=$entity_value_sql<br>";
+        $entity_value_q = db_query($conn, $entity_value_sql);
+        $entity_value=db_fetch_row($entity_value_q)  ;
+// ***************************************************
+
+        foreach($entity_structure as $k=>$v)
+        {
+                $name_var=$v['COL_NAME'];
+                $$name_var= $entity_value[strtoupper($v['COL_NAME'])];
+                //echo $$name_var;
+                if ($v['NULL'] == "t")
+                    $field_header_class = "FieldTitle";
+                else
+                    $field_header_class = "FieldTitleRequired";
+                trtd('','width="30%" align="right" class='.$field_header_class);
+                //echo "NULL VALUE = ".$v['NULL'];
+                echo $v['COL_ABOUT'];
+                tdend();
+                td('class="FieldContent" width="70%"');
+                //echo"entity_structure[$i]['NULL_VAL']=".$entity_structure[$i]['NULL_VAL']."<br>";
+                //show_control($conn, $ti_arm_id, $entity_id, $break_create, $sub_arm, $g_url, $entity_structure, $showsel, $entity_value, $k, $v, $i_sel, 0, 0, 1, $ans, $sub_arm, $v['NULL']);
+                //show_control ($conn, $ti_arm_id, $entity_id, $break_create, $sub_arm, $g_url, $entity_structure, $showsel, $res,         $k, $v, $i_sel, $new = 0, $complex = 0, $complex_edit=0, $return=1, $sub_arm="")
+                //        echo $ti_arm_id;
+//.blacki -------------
+                show_control($conn, $ti_arm_id, $entity_id, $break_create, $sub_arm, $g_url, $entity_structure, $showsel, $entity_value, $k, $v, $i_sel, 0, 1, 1, $ans, $sub_arm, $v['NULL'], "form_name"=>"complex_edit_form");
+//old                show_control($conn, $ti_arm_id, $entity_id, $break_create, $sub_arm, $g_url, $entity_structure, $showsel, $entity_value, $k, $v, $i_sel, 0, 1, 1, $ans, $sub_arm, $v['NULL']);
+//------------- .blacki
+                tdend();
+        }
+//*******************************************
+        $sviz_structure = get_relation_many2many($conn, $ti_arm_id);
+        foreach ($sviz_structure as $key => $val)
+        {
+                trtd('','align="right" class = "FieldTitle"');
+                echo $val['SVIZ_NAME'];
+                tdtd();
+                show_sviz_control($conn, $val, $table_name, $entity_id);
+                tdtr();
+        }
+        forminput("hidden", "arm_id", $ti_arm_id);
+        forminput("hidden", "entity_id", $entity_id);
+        if ($entity_structure[0]['POST'] == 1)
+        {
+                trtd('','align="right"');
+                echo "Включать в рассылку";
+                tdtd();
+                forminput("checkbox", $entity_structure[0]['TABLE_NAME']."_post");
+                /*select_up($entity_structure[0]['TABLE_NAME']."_post", "size='1'");
+                optioninp(1, "Да");
+                optioninp(0, "Нет");
+                select_down();*/
+                tdtr();
+        }
+        if ($entity_structure[0]['SEARCH'] & 2)
+        {
+                trtd('','align="right"');
+                echo "Индексировать";
+                tdtd();
+                forminput("checkbox", $entity_structure[0]['TABLE_NAME']."_search");
+                tdtr();
+        }
+        trtd('','colspan="2"');
+        br();
+        tdtr();
+        trtd('','colspan="2" align="center"');
+        if ($entity_structure[0]['EDIT_ROW'] == "t")
+        {
+                forminput("submit", "update_entity", "Сохранить данные");
+                nbsp();
+                forminput("reset", "reset_entity", "Очистить");
+        }
+        else
+                nbsp();
+        tdtr();
+        tableend();
+        formend();
+        adm_navigation_end();
+}
+?>

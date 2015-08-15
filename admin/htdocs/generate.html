@@ -1,0 +1,191 @@
+<?
+//генерация скрипта для заполнения метаданных
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+function save_string($string)
+         {
+         echo"$string;<br>";
+         }
+function generate_script_string($table, $res_ar, $ar=array())
+         {
+         extract($ar);
+         $table=strtoupper($table);
+         foreach($res_ar as $res_k=>$res_v)
+         {
+         $cols="";
+         $val="";
+         foreach($res_v as $k=>$v)
+                 {
+                 if(is_string($k))
+                    {
+                    if(strtoupper($k)=="ID")
+                       {
+                       //$ar_id_tmp[$v]=count($ar_id_tmp);
+                       //echo$table."[$v]=".$ar_id_tmp[$v]."<br>";
+                       $v=db_nextval(seq_name($table));
+                       $ret['currval']=db_currval(seq_name($table));
+                       }
+                    else
+                        {
+                        if($pre_vals[$k])//если надо заменить на конкретное значение
+                           $v=$pre_vals[$k];
+                        elseif($set_vals[$k])//если надо заменить на значение из массива
+                               {
+                               $set_vals_tmp=$set_vals[$k];
+                               global $$set_vals_tmp;
+                               $val_ar=$$set_vals_tmp;
+
+                               //echo"set_vals_tmp=$set_vals_tmp, table=$table<br>";
+                               if(isset($val_ar[$v]))
+                                  {
+                                  if($set_vals_tmp!=$table)//если это не ссылка на себя
+                                     {
+                                     $ind=$val_ar[$v];
+                                     $minus=count($val_ar)-$ind-1;
+                                     $v="(".db_currval(seq_name($set_vals[$k]))."-$minus)";
+                                     }
+                                  else
+                                      {
+                                      $ind=$val_ar[$v];
+                                      $ind_this=$val_ar[$res_v['ID']];
+                                      //echo"<b>ind=$ind, ind_this=$ind_this</b><br>";
+                                      $minus=$ind_this-$ind;
+                                      if($minus<0)
+                                         $minus="+".abs($minus);
+                                      else
+                                         $minus="-$minus";
+                                      $v="(".db_currval(seq_name($set_vals[$k]))."$minus)";
+                                      }
+                                  }
+                               else
+                                   {
+                                   $v=BASE_NULL;
+                                   }
+                               }
+                        elseif(strval($v)!='')
+                            $v="'".ereg_replace("'", "''", $v)."'";
+                        }
+                    if($v)
+                       {
+                       $cols.=($cols?", ":"").$k;
+                       $val.=($val?", ":"").$v;
+                       }
+                    }
+                 }
+         $ret['string']="insert into $table($cols) values($val)";
+         //$$table=$ar_id_tmp;
+         save_string($ret['string']);
+
+         }
+         return $ret;
+         }
+/*
+function generate_script($conn, $table_id)
+         {
+         $sel_table="select * from ".TABLE_PRE."tables where id=$table_id";
+         $res_table=db_getArray($conn, $sel_table, 2);
+         }
+*/
+function pre_gen_script($conn, $table, $where="", $ar=array())
+         {
+         extract($ar);
+         $sel_q="SELECT * FROM $table $where order by id";
+
+         $table=strtoupper($table);
+         global $$table;
+         $ar_id_tmp=$$table;
+
+         $res=db_getArray($conn, $sel_q);
+         //if(!count($res))
+          //   {
+             echo"<b>sel_q=$sel_q</b><br>";
+            // }
+         foreach($res as $k=>$v)
+                 {
+                 $ar_id_tmp[$v['ID']]=count($ar_id_tmp);
+
+                 //echo $table."[".$v['ID']."]=".$ar_id_tmp[$v['ID']]."<br>";
+                 //$seq=db_nextval(seq_name($table));
+                 //$res['ID']=db_currval(seq_name($table));
+                 }
+         $$table=$ar_id_tmp;
+         return $res;
+         }
+//Типы контролов, типы колонок и типы АРМов должны быть перелиты заранее
+//$ctrl_type=pre_gen_script($conn, TABLE_PRE."control_types");
+//generate_script_string(TABLE_PRE."control_types", $ctrl_type);
+
+//системные сущности
+//$sel_sys_ent="SELECT * from ".TABLE_PRE."entities where system_flag=1";
+if($ent_id)//по определнной сущности
+   {
+   $ent=pre_gen_script($conn, TABLE_PRE."entities", "WHERE id=$ent_id");
+   }
+elseif($all)//все
+   $ent=pre_gen_script($conn, TABLE_PRE."entities");
+else//системные
+   $ent=pre_gen_script($conn, TABLE_PRE."entities", "WHERE system_flag=1");
+generate_script_string(TABLE_PRE."entities", $ent);
+foreach($ent as $k=>$v)
+        {
+        $ent_list.=($ent_list?", ":"").$v['ID'];
+        }
+
+$tab=pre_gen_script($conn, TABLE_PRE."tables", (!$all?"WHERE id in(select table_id from ".TABLE_PRE."entity_table  where entity_id in ($ent_list))":""));
+generate_script_string(TABLE_PRE."tables", $tab);
+foreach($tab as $k=>$v)
+        {
+        $tab_list.=($tab_list?", ":"").$v['ID'];
+        }
+
+$ent_tab=pre_gen_script($conn, TABLE_PRE."entity_table", (!$all?"WHERE entity_id in ($ent_list)":""));
+$set_vals=array("TABLE_ID"=>TABLE_PRE."TABLES", "ENTITY_ID"=>TABLE_PRE."ENTITIES");
+generate_script_string(TABLE_PRE."entity_table", $ent_tab, array("set_vals"=>$set_vals));
+
+$cols=pre_gen_script($conn, TABLE_PRE."columns", (!$all?"WHERE table_id in ($tab_list)":""));
+$set_vals=array("TABLE_ID"=>TABLE_PRE."TABLES", "REF_COLUMN_ID"=>TABLE_PRE."COLUMNS");
+generate_script_string(TABLE_PRE."columns", $cols, array("set_vals"=>$set_vals));
+
+//АРМы
+$arms=pre_gen_script($conn, TABLE_PRE."arms", (!$all?"WHERE entity_id in ($ent_list)":""));
+//Контролы
+foreach($arms as $k=>$v)
+        {
+        $arm_list.=($arm_list?", ":"").$v['ID'];
+        }
+$set_vals=array("ENTITY_ID"=>TABLE_PRE."ENTITIES");
+generate_script_string(TABLE_PRE."arms", $arms, array("set_vals"=>$set_vals));
+if($ctrl!="no")
+	{
+	$ctrl=pre_gen_script($conn, TABLE_PRE."controls", "where ADDITIONAL_ARM_ID is null or ADDITIONAL_ARM_ID in($arm_list)");
+	$set_vals=array("ADDITIONAL_ARM_ID"=>TABLE_PRE."ARMS");
+	generate_script_string(TABLE_PRE."controls", $ctrl, $set_vals);
+	}
+
+
+
+$arm_add=pre_gen_script($conn, TABLE_PRE."arm_additional", (!$all?"WHERE arm_id in ($arm_list)":""));
+foreach($arm_add as $k=>$v)
+        {
+        if($v['ADM_NAVIGATION_ID'])
+           $arm_nav_list.=($arm_nav_list?", ":"").$v['ADM_NAVIGATION_ID'];
+        }
+$adm_nav=pre_gen_script($conn, TABLE_PRE."adm_navigation", (!$all?"WHERE id in ($arm_nav_list)":""));
+generate_script_string(TABLE_PRE."adm_navigation", $adm_nav);
+
+$set_vals=array("ARM_ID"=>TABLE_PRE."ARMS", "ADM_NAVIGATION_ID"=>TABLE_PRE."ADM_NAVIGATION");
+generate_script_string(TABLE_PRE."arm_additional", $arm_add, array("set_vals"=>$set_vals));
+
+$arm_arm=pre_gen_script($conn, TABLE_PRE."arm_arm", (!$all?"WHERE parent_arm_id in ($arm_list) AND child_arm_id in ($arm_list)":""));
+$set_vals=array("PARENT_ARM_ID"=>TABLE_PRE."ARMS", "CHILD_ARM_ID"=>TABLE_PRE."ARMS");
+generate_script_string(TABLE_PRE."arm_arm", $arm_arm, array("set_vals"=>$set_vals));
+
+
+$arm_cols=pre_gen_script($conn, TABLE_PRE."arm_columns", "WHERE arm_id in ($arm_list)");
+if($ctrl!="no")
+	$set_vals=array("ARM_ID"=>TABLE_PRE."ARMS", "COLUMN_ID"=>TABLE_PRE."COLUMNS", "FILTER_TYPE_ID"=>TABLE_PRE."CONTROLS", "LIST_TYPE_ID"=>TABLE_PRE."CONTROLS", "FORM_TYPE_ID"=>TABLE_PRE."CONTROLS");
+else
+	$set_vals=array("ARM_ID"=>TABLE_PRE."ARMS", "COLUMN_ID"=>TABLE_PRE."COLUMNS");
+generate_script_string(TABLE_PRE."arm_columns", $arm_cols, array("set_vals"=>$set_vals));
+
+?>

@@ -1,0 +1,9 @@
+php_flag register_globals on
+SetEnv g_INC '/var/www/admin/inc/'
+SetEnv PATH_INC_HOST "/var/www/dikar/inc/"
+SetEnv LOG_DIR "/var/www/logs/"
+ErrorDocument 404 /404.html
+
+#For php code in .html
+RemoveHandler .html .htm
+AddType application/x-httpd-php .php .htm .html .phtml

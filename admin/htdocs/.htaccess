@@ -1,0 +1,19 @@
+AuthType Basic
+AuthName "T-1"
+AuthUserFile /var/www/admin/inc/.htpasswd
+<Limit GET POST>
+  require valid-user
+</Limit>
+php_flag register_globals on
+php_value upload_max_filesize 25M
+php_value post_max_size 25M
+php_value mbstring.internal_encoding CP1251
+php_value mbstring.http_input CP1251
+php_value mbstring.http_output CP1251
+php_value mbstring.language Russian
+php_value exif.encode_unicode CP1251
+SetEnv g_INC '/var/www/admin/inc/'
+
+#For php code in .html
+RemoveHandler .html .htm
+AddType application/x-httpd-php .php .htm .html .phtml

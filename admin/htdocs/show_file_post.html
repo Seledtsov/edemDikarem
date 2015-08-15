@@ -1,0 +1,30 @@
+<?
+include(getenv("g_INC")."conf.php");
+include(PATH_INC."inc.php");
+db_getVar ($conn, "select c.name as column_name, t.name as table_name from ".TABLE_PRE."columns c, ".TABLE_PRE."tables t  where column_id = $col_id and c.table_id = t.table_id");
+$column_name = $GLOBALS['column_name'];
+$table_name = $GLOBALS['table_name'];
+$file_info_sql = "
+	select 
+			ft.name as ".$column_name."_type, 
+ 			tn.".$column_name."_name, 
+ 			tn.$column_name,  
+ 			tn.".$column_name."_size, 
+ 			tn.".$column_name."_width, 
+ 			tn.".$column_name."_height 
+ 		from 
+ 			$table_name tn,
+ 		    ".TABLE_PRE."file_type ft
+ 		where 
+ 			tn.id = $entity_id and
+ 			ft.id = tn.".$column_name."_type
+	";
+db_getVar($conn, $file_info_sql);
+$file_type = $GLOBALS[$column_name."_type"];
+$file_size = $GLOBALS[$column_name."_size"];
+$lo_oid = $GLOBALS[$column_name];
+$file_img = db_get_file_data($conn, $lo_oid, $file_size);
+Header( "Content-type: ".$file_type);
+echo $file_img;
+
+?>

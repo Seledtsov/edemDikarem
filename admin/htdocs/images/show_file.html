@@ -1,0 +1,42 @@
+<?
+if(getenv("g_INC"))
+	include_once(getenv("g_INC")."conf.php");
+else
+	include_once($_SERVER['DOCUMENT_ROOT']."/inc/conf.php");
+DEFINE("NO_SES", 1);
+include(PATH_INC."inc.php");
+if ($col_id == 0)
+        {
+                $table_name=MULT_TAB;
+                $column_name=strtolower(MULT_COL);
+        }
+        else
+        {
+                $dbmm_param = db_getArray($conn, "select c.name as column_name, t.name as table_name from ".TABLE_PRE."columns c, ".TABLE_PRE."tables t  where column_id = $col_id and c.table_id = t.table_id", 2);
+            $column_name = $dbmm_param['column_name'];
+            $table_name = $dbmm_param['table_name'];
+        }
+$file_info_sql = "
+        select
+                        ft.name as ".$column_name."_type,
+                         tn.".$column_name."_name,
+                         tn.$column_name,
+                         tn.".$column_name."_size,
+                         tn.".$column_name."_width,
+                         tn.".$column_name."_height
+                 from
+                         $table_name tn,
+                     ".TABLE_PRE."file_type ft
+                 where
+                         tn.id = $entity_id and
+                         ft.id = tn.".$column_name."_type
+        ";
+$res = db_getArray($conn, $file_info_sql, 2);
+$file_type = $res[strtoupper($column_name."_type")];
+$file_size = $res[strtoupper($column_name."_size")];
+$lo_oid = $res[strtoupper($column_name)];
+$file_img = db_get_file_data($conn, $lo_oid, $file_size);
+Header( "Content-type: ".$file_type);
+echo $file_img;
+
+?>

@@ -1,0 +1,31 @@
+<?
+$start_time_global=mktime();
+//echo"g_INC=".getenv("g_INC")."<br>";
+//ini_set('display_errors', 1);
+//ini_set('error_reporting', 15);
+//phpinfo();
+
+include_once(getenv("g_INC")."conf.php");
+//echo"1<br>";
+//phpinfo();
+include_once(PATH_INC."main_inc.php");
+//echo"2<br>";
+include_once(PATH_INC."func/func_layout_xml.php");
+//echo"3<br>";
+//формируем страницу с помощью слоя
+$start_time_page=mktime();
+include_once(PATH_INC."tools/layout_page.php");
+//echo"4<br>";
+$time_page=mktime()-$start_time_page;
+$str=g_URL;
+if(defined("g_QUERY"))
+	$str.="?".g_QUERY;
+if($layer_nocache_flag)
+	$str.=" NO CACHE";
+$str.="\ttime_all\t".(mktime()-$start_time_global)."\ttime_page\t".$time_page ."\ttime_xml_to_html\t".$time_xml_to_html;
+if($time_page>10)
+	$str.="\tAttention!!!";
+elseif($time_page>4)
+	$str.="\tLONG TIME!!!";
+// file_log (LOG_PATH.HOST."_".lang."_time_exec.".date("w").".log", $str);
+?>
