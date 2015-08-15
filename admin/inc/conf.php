@@ -1,181 +1,68 @@
 <?
-//define("ADODB_DIR", etenv("g_INC")."adodb");
 ini_set('display_errors', 0);
 ini_set('error_reporting', 15);
 ini_set('log_errors', 1);
-//ini_set('error_log', 'nk/t3/logs/t3_php.log');
-//phpinfo();
 ini_set('error_reporting', 7);
-//echo"<pre>"; print_r($_SESSION);
-//print_r($_POST);
-//print_r($_FILES);
-// ***************** Параметров к БД ****************************//
-define("TABLE_PRE", "TI_");
-//echo"be";
-// ***************** Конец параметров к БД ****************************//
- if($HTTP_HOST)
-   define("g_HOST", $HTTP_HOST);
- elseif($_SERVER["HTTP_HOST"])
-   define("g_HOST", $_SERVER["HTTP_HOST"]);
-if(!defined("g_HOST"))//если из командной строки
-      {
-      $argv = $_SERVER["argv"];
-      foreach($argv as $k_av=> $v_av)
-                {
-                $argv_ar=split("=", $v_av);
-                if($argv_ar[0]=="host")
-					define("HOST", trim($argv_ar[1]));
-                elseif($argv_ar[0]=="period")
-					define("PERIOD", trim($argv_ar[1]));
-				elseif($argv_ar[0]=="lang")
-					define("lang", trim($argv_ar[1]));
-                $argv_name=$argv_ar[0];
-                $$argv_name= trim($argv_ar[1]);
-                }
 
-      }
-elseif(eregi("fntr", g_HOST))//ФНТР
+// ***************** РџР°СЂР°РјРµС‚СЂРѕРІ Рє Р‘Р” ****************************//
+define("TABLE_PRE", "TI_");
+// ***************** РљРѕРЅРµС† РїР°СЂР°РјРµС‚СЂРѕРІ Рє Р‘Р” ****************************//
+
+if($HTTP_HOST)
+	define("g_HOST", $HTTP_HOST);
+elseif($_SERVER["HTTP_HOST"])
+	define("g_HOST", $_SERVER["HTTP_HOST"]);
+
+if(!defined("g_HOST"))//РµСЃР»Рё РёР· РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
 	{
-    	define("HOST", "fntr");
-	if(eregi("eng", g_HOST))
-		DEFINE("lang", "eng");
-	else
-		DEFINE("lang", "rus");
-   	}
-elseif(eregi("ettc", g_HOST))//ФНТР
-	{
-    	define("HOST", "ettc08");
-	if(eregi("rus", g_HOST))
-		DEFINE("lang", "rus");
-	else
-		DEFINE("lang", "eng");
-  	}
-elseif(eregi("dvgazeta", g_HOST))//ФНТР
-	{
-    	define("HOST", "dvgazeta");
-  	}
-elseif(eregi("inex\.expert", g_HOST))//ФНТР
-	{
-    	define("HOST", "inexexpert");
-  	}
-elseif(eregi("tehnosk", g_HOST))//Технос-К
-	{
-    define("HOST", "tehnosk");
-    }
-elseif(eregi("kasyanov", g_HOST) )
-      {
-      define("HOST", "kasyanov");
-      if(eregi("eng", g_HOST))
-		DEFINE("lang", "eng");
-      else
-		DEFINE("lang", "rus");
-      }
+	$argv = $_SERVER["argv"];
+	foreach($argv as $k_av=> $v_av)
+		{
+		$argv_ar=split("=", $v_av);
+		if($argv_ar[0]=="host")
+			define("HOST", trim($argv_ar[1]));
+		elseif($argv_ar[0]=="period")
+			define("PERIOD", trim($argv_ar[1]));
+		elseif($argv_ar[0]=="lang")
+			define("lang", trim($argv_ar[1]));
+		$argv_name=$argv_ar[0];
+		$$argv_name= trim($argv_ar[1]);
+		}
+	}
 elseif(eregi("dikar", g_HOST))
-        {
-    define("HOST", "dikar");
-    }
+	{
+	define("HOST", "dikar");
+	}
 elseif(eregi("hr-praktiki", g_HOST))
-        {
-    define("HOST", "hr-praktiki");
-    }
-elseif(eregi("agency", g_HOST)) {
-	if(!DEFINED("NO_SES")){
-   	 session_start();
+	{
+	define("HOST", "hr-praktiki");
 	}
-	ini_set('error_log', '/home/client45/02logs/agency.php.log');
-    define("HOST", "agency");
-    $lang = "rus";
-    if(eregi("eng", g_HOST) || $_REQUEST["lang"]=="en" || $_REQUEST["lang"]=="eng"){
-		$lang="eng";
-	}elseif(eregi("rus", g_HOST) || $_REQUEST["lang"]=="rus"){
-		$lang= "rus";
-	}elseif(isset($_SESSION["user_lang"])){
-		$lang = $_SESSION["user_lang"];
-	}else{
-		$lang= "rus";
+elseif(eregi("oooinex", g_HOST)) 
+	{
+	define("HOST", "oooinex");
 	}
-	DEFINE("lang", $lang);
-}
-elseif(eregi("oooinex", g_HOST)) {
-    define("HOST", "oooinex");
-    }
+
 define("DBASE", "POSTGRESQL");
-define("DBASE_ATTR", "_post");//используется для подсоединения специфимческих для данной базы файлов
-//define("DB", "lite");
-//define("DB_HOST", "uran.tinfor.ru");
+define("DBASE_ATTR", "_post");//РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїРѕРґСЃРѕРµРґРёРЅРµРЅРёСЏ СЃРїРµС†РёС„РёРјС‡РµСЃРєРёС… РґР»СЏ РґР°РЅРЅРѕР№ Р±Р°Р·С‹ С„Р°Р№Р»РѕРІ
 define("DB_HOST", "localhost");
-if(lang=="eng" && HOST=="agency"){
-			DEFINE("DB_USER", "public_en");
-			DEFINE("DB_PASSWD", "pst_en");
-}else{
-	define("DB_USER", "pst");
-	define("DB_PASSWD", "pst");
-}
-define("DB_LOW_USER", "pst");//пользователь со сниженным приоритетом
+define("DB_USER", "pst");
+define("DB_PASSWD", "pst");
+
+define("DB_LOW_USER", "pst");//РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРѕ СЃРЅРёР¶РµРЅРЅС‹Рј РїСЂРёРѕСЂРёС‚РµС‚РѕРј
 define("BASE_TRUE", "t");
 define("BASE_FALSE", "f");
 define("BASE_NULL", "null");
 
 
-if(HOST=="fntr")
-	{
-	if(!DEFINED("lang"))
-		DEFINE("lang", "rus");
-	if(lang=="eng")
-		DEFINE("DB", "fntr_eng");
-	else
-		DEFINE("DB", "fntr");
-	}
-elseif(HOST=="tehnosk")
-	{
-        DEFINE("DB", "tehnosk");
-        define("FORUM_IN_SITE", 1);
-        define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="ettc08")
-	{
-        DEFINE("DB", "ettc08");
-        define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="dvgazeta")
-	{
-        DEFINE("DB", "dvgazeta");
-        define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="kasyanov")
-	{
-    	DEFINE("DB", "kasyanov");
-        define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="parus")
-	{
-    	DEFINE("DB", "parus");
-        define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="oooinex")
-	{
-    	DEFINE("DB", "oooinex");
-      define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="inexexpert")
-	{
-    	DEFINE("DB", "inexexpert");
-      define("PUBLISH_LIST", "2");
-	}
-elseif(HOST=="dikar")
-        {
-        DEFINE("DB", "dikar");
-        define("PUBLISH_LIST", "2");
-        }
-elseif(HOST=="hr-praktiki")
-        {
-        DEFINE("DB", "hr-praktiki");
-        define("PUBLISH_LIST", "2");
-        }
-elseif(HOST=="agency")
-{
-        DEFINE("DB", "agency");
-        define("PUBLISH_LIST", "2");
+if(HOST=="oooinex") 	{
+	DEFINE("DB", "oooinex");
+	define("PUBLISH_LIST", "2");
+} elseif(HOST=="dikar") {
+	DEFINE("DB", "dikar");
+	define("PUBLISH_LIST", "2");
+} elseif(HOST=="hr-praktiki") {
+	DEFINE("DB", "hr-praktiki");
+	define("PUBLISH_LIST", "2");
 }
 
 if(getenv("g_INC"))
@@ -205,9 +92,9 @@ elseif($_SERVER["SCRIPT_NAME"])
 
  $g_query = getenv('QUERY_STRING');
 
- define("DELETE", "Удаление");
- define("ADD", "Добавление");
- define("UPDATE", "Редактирование");
+ define("DELETE", "РЈРґР°Р»РµРЅРёРµ");
+ define("ADD", "Р”РѕР±Р°РІР»РµРЅРёРµ");
+ define("UPDATE", "Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ");
 
 define("PUBLISH", "PUBLISH_STATE_ID");
 define("DATE_MAIN", "DATE_MAIN");
@@ -220,18 +107,17 @@ if(ereg(",", PUBLISH_LIST))
 else
    define("PUBLISH_SQL", "=".PUBLISH_LIST);
 
-DEFINE("POST_OBJ", 1);//нет привязки рассылки к навигации, только сущностей
+DEFINE("POST_OBJ", 1);//РЅРµС‚ РїСЂРёРІСЏР·РєРё СЂР°СЃСЃС‹Р»РєРё Рє РЅР°РІРёРіР°С†РёРё, С‚РѕР»СЊРєРѕ СЃСѓС‰РЅРѕСЃС‚РµР№
 /*SYSTEM PARAMETERS*/
-DEFINE("PHP_STR_PATH", "/usr/bin/php");//путь к php - для запуска из строки
+DEFINE("PHP_STR_PATH", "/usr/bin/php");//РїСѓС‚СЊ Рє php - РґР»СЏ Р·Р°РїСѓСЃРєР° РёР· СЃС‚СЂРѕРєРё
 
 DEFINE("APACHE_BIN", "/usr/bin/");
-//echo"g_HOST=".g_HOST."<br>";
 if(eregi("loc", g_HOST))
 	{
 	define("SQL_LOG_FILE", "E:/svn/trunk/t3/logs/sql_log_".HOST.".log");
 	global $_SERVER;
 	define("XML_LOG_FILE", "E:/svn/trunk/t3/logs/xml_log_".HOST."_".$_SERVER['REMOTE_ADDR'].".log");
-	define("TEST_SERVER_FLAG", 1);//флаг, что тестовый сервер
+	define("TEST_SERVER_FLAG", 1);//С„Р»Р°Рі, С‡С‚Рѕ С‚РµСЃС‚РѕРІС‹Р№ СЃРµСЂРІРµСЂ
 	define("LOG_PATH", "E:/svn/trunk/t3/logs/");
 	define("LOG_PATH", "E:/svn/trunk/t3/logs/");
 	}
@@ -239,25 +125,19 @@ else
 	{
 	define("SQL_LOG_FILE", "/var/www/sql_log_".HOST.".log");
 	define("LOG_PATH", "/var/www/");
-	define("LOG_DIR", "/tmp/");//путь к директории логов
+	define("LOG_DIR", "/tmp/");//РїСѓС‚СЊ Рє РґРёСЂРµРєС‚РѕСЂРёРё Р»РѕРіРѕРІ
 	}
-//echo"g_HOST=".SQL_LOG_FILE."<br>";
 	DEFINE("POST_SERVER", "localhost");//server dlja otpravki pochty
-//USE cache
 if(!((eregi("loc", g_HOST) && $REMOTE_ADDR!='127.0.0.1') || eregi("test", g_HOST) ))
 	{
-	//echo"cache<br>";
 	DEFINE("CACHE_YES", 1);
 	}
-//DEFINE("CACHE_YES", 1);
 
 //mktime_error
 ini_set('display_errors', 0);
 if(mktime(0, 0, 0, 1, 1, 1969)==-1 || mktime(0, 0, 0, 1, 1, 1969)==mktime(0, 0, 0, 1, 1, 1960))
-	DEFINE("MKTIME_CORR", 30);//прибавляем столько лет
+	DEFINE("MKTIME_CORR", 30);//РїСЂРёР±Р°РІР»СЏРµРј СЃС‚РѕР»СЊРєРѕ Р»РµС‚
 else
 	DEFINE("MKTIME_CORR", 0);
-//echo"MKTIME_CORR=".MKTIME_CORR."<br>";
 ini_set('display_errors', 0);
-//echo mktime(0, 0, 0, 1, 1, 2057);
 ?>
