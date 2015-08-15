@@ -39,8 +39,6 @@
 	<xsl:template name="Header">
 		<div class="collage">
 			<div class="logo"><a href="/"><img src="/images/logo.png" border="0" /></a></div>
-			<div class="phone">(495) 66-99-276</div>
-			<div class="email"><a href="mailto:info@edemdikarem.ru">info@edemdikarem.ru</a></div>
 			<div class="menu">
 				<xsl:call-template name="MainNavigation" />
 			</div>
@@ -49,7 +47,7 @@
 
 	<xsl:template name="Footer">
 		<div class="footer">
-			ООО «Едем дикарём» | (495) 66-99-276 | <a href="mailto:info@edemdikarem.ru">info@edemdikarem.ru</a>
+			ООО «Едем дикарём»
 		</div>
 	</xsl:template>
 
